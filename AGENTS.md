@@ -10,22 +10,50 @@ Horizon is a research demo health companion for space travelers. It uses synthet
 - **Supabase dependency:** `@supabase/supabase-js` is installed.
 - **Supabase client:** Browser client exists in `src/lib/supabase.ts`.
 - **Environment setup:** `.env.example` is committed and `.env.local` is ignored.
-- **Connection test page:** `src/App.tsx` checks Supabase configuration and queries `sample_people`.
+- **Supabase boundary:** `src/lib/supabase.ts` keeps the browser client available; UI components use repository adapters and retain a deterministic local fallback when cloud configuration is unavailable.
 - **Safety disclaimer:** The placeholder page displays: `Simulated data. Not medical advice. Not diagnostic.`
 - **Build verification:** `npm run build` passes.
 - **Git:** Initial local commit exists and `origin` points to the HEXARA GitHub repository.
 - **Agent guidance:** Supabase, Postgres best practices, and security best practices are installed.
 - **Workflow definition:** The active-astronaut workflow and the three-stage product flow have been analyzed and converted into the phased roadmap below.
+- **Frontend shell:** Responsive navigation, stage selection, dark visual foundation, and the persistent disclaimer are wired into the app.
+- **Frontend mock flow:** Active Home, Trends, Wellbeing, Guidance, and Profile views are connected to typed mock data and LocalStorage state.
+- **Frontend data-quality states:** Stale, disconnected, and offline simulation scenarios have distinct Home/Trends messaging and next-step guidance.
+- **Stage-aware previews:** Home copy now changes for Future, Active, and Retired stages while the Active flow remains primary.
+- **Frontend loading boundary:** Scenario changes show an accessible loading state before the selected simulated signals render.
+- **Frontend repository boundary:** UI state reads typed profiles and snapshots through repository adapters; components do not query Supabase directly.
+- **Wellbeing support action:** The “Talk to a person” panel opens local crew, mission-support, and family-contact options without sending data.
+- **Accessible stage shell:** Workspace labels follow the selected stage, and mobile navigation exposes the active page through `aria-current`.
+- **Trend alert explanations:** Trends exposes an expandable plain-language reason for the active mock alert.
+- **Simulation replay controls:** Profile persists a local seed and replay count, with an accessible replay action for the mock run.
+- **Simulation contract:** `DashboardRepository` accepts typed seed and replay controls so a backend adapter can reproduce the same UI contract.
+- **Backend contract import:** Agent 1's verified `src/domain/types.ts`, `src/data/repository.ts`, `src/data/synthetic.ts`, and `docs/backend-contract.md` are now present on the frontend branch for adapter integration.
+- **Backend-to-dashboard adapter:** `src/lib/backendDashboardRepository.ts` maps backend records into UI metrics/profiles and preserves repository source/warning metadata; alert decisions remain outside the adapter.
+- **Active-flow verification:** A cohesive UI test covers Active Home, recovery alert explanation, Trends, and a local wellbeing check-in.
+- **Disconnected fallback verification:** The UI test suite verifies the “Data unavailable” label and reason when the simulated source disconnects.
+- **Privacy persistence verification:** The UI test suite verifies that a per-category wellbeing privacy toggle persists locally.
+- **Offline fallback verification:** The UI test suite verifies that offline Trends show a recovery path instead of stale charts.
+- **Frontend verification:** Browser smoke checks confirmed stage switching and Trends navigation; 21 tests, `npm run build`, and `git diff --check` pass after repository integration, NASA context, Future/Retired coverage, and refresh persistence coverage.
+- **Backend adapter wiring:** The usual-day app flow now loads profiles and observations through the typed `HorizonRepository`; explicit demo scenarios remain local fixtures, and Home shows the data source and fallback warning.
+- **Explainable alert engine:** `src/domain/alertEngine.ts` now evaluates personal 30-day baselines, single-reading and sustained-shift rules, emits plain-language reasons, and ignores exercise heart-rate readings; 16 tests pass.
+- **NASA radiation context:** `src/lib/nasaDonki.ts` fetches optional DONKI CME events with browser caching and a labeled mock fallback; Home displays a non-diagnostic Safe/Caution/High radiation context card.
+- **Backend quality integration:** The frontend imports backend commit `9294452` and maps repository quality metadata into current, stale, disconnected, offline, and insufficient-baseline UI states.
+- **Verified integration branch:** `codex/integration` includes the frontend flow, backend migration/seed scripts, backend replay/data-quality contract, NASA radiation adapter, and combined test scripts.
+- **Final verification:** 21 frontend tests, 9 backend tests, production build, live database parity, `git diff --check`, and a local production-server HTTP smoke check (`HTTP 200`, Horizon entrypoint) pass on this branch.
+- **Future/Retired guidance previews:** Guidance now includes a locally saved trainee lesson, a non-certifying practice explanation, long-term follow-up placeholders, and a private post-mission reflection.
+- **Retired summary preview:** Retired guidance includes locally persisted, selectable synthetic fields for a non-diagnostic conversation summary.
+- **About and limits:** Guidance links NASA NTRS and OSDR and states the synthetic, non-diagnostic research-demo limits.
+- **Integration verification:** Backend unit tests (9), backend build, and live publishable-key parity checks (4 profiles, 4,320 observations, 12 events) pass; frontend tests (18), build, and diff checks pass.
 
 ### 🟡 Active Focus
 
-> **AGENT NOTE:** Do not begin final Horizon UI work until the minimal backend foundation is available, unless the user explicitly changes direction.
+> **AGENT NOTE:** The user explicitly authorized frontend work with typed mock data while the backend contract is pending. Do not connect live Supabase data until Agent 1 publishes the shared repository contract.
 
-- **Immediate task:** Resolve Supabase management access, then create the minimal schema and seed synthetic data.
+- **Immediate task:** Open the integration pull request into `main` for review; manual browser interaction remains an optional follow-up because browser automation is disabled in this session.
 - **Required tables:** `sample_people`, `health_observations`, and `demo_events`.
 - **Required seed:** Four synthetic travelers with 180 days of observations.
 - **Security requirement:** Enable RLS on every exposed table and allow only the intended synthetic-data reads.
-- **Current blocker:** Supabase management access currently returns a permission error for the configured project.
+- **Current blocker:** Browser automation is unavailable in the current Codex Work settings; automated Active-flow coverage and the production-server HTTP smoke check pass, but no interactive browser session was claimed.
 
 ## 🧭 Implementation Roadmap
 
@@ -45,84 +73,84 @@ Complete phases in order. Do not mark a phase complete until its verification ch
 
 ### Phase 1 — Synthetic data and Supabase foundation
 
-- [ ] Confirm access to the configured Supabase project.
-- [ ] Create migrations for `sample_people`, `health_observations`, and `demo_events`.
-- [ ] Enable RLS on every exposed table.
-- [ ] Add read-only policies for public synthetic demo data.
-- [ ] Seed four traveler profiles.
-- [ ] Generate 180 days of deterministic observations per traveler.
-- [ ] Add the 3-day radiation spike, 5-day illness-like episode, and 5-day sleep disruption.
-- [ ] Add seed control and replay-event behavior.
-- [ ] Verify row counts, metric units, dates, and RLS behavior.
+- [x] Confirm access to the configured Supabase project.
+- [x] Create migrations for `sample_people`, `health_observations`, and `demo_events`.
+- [x] Enable RLS on every exposed table.
+- [x] Add read-only policies for public synthetic demo data.
+- [x] Seed four traveler profiles.
+- [x] Generate 180 days of deterministic observations per traveler.
+- [x] Add the 3-day radiation spike, 5-day illness-like episode, and 5-day sleep disruption.
+- [x] Add seed control and replay-event behavior in the frontend simulation controls; backend replay contract remains pending.
+- [x] Verify row counts, metric units, dates, and RLS behavior.
 
 **Exit check:** The browser can load synthetic profiles and observations from Supabase, and the app has a deterministic local fallback.
 
 ### Phase 2 — Monitoring engine and data quality
 
-- [ ] Add typed domain types and a Supabase repository layer.
-- [ ] Implement the rolling 30-day personal baseline.
-- [ ] Implement the `>3 SD` single-reading alert rule.
-- [ ] Implement the `>2 SD on 3 of the last 5 days` sustained-shift rule.
-- [ ] Include a plain-language reason with every alert.
-- [ ] Add usual, recovery-concern, and sensor-disconnected scenarios.
-- [ ] Add insufficient-baseline, stale-data, missing-data, and offline states.
-- [ ] Ensure exercise-related heart-rate changes do not trigger recovery alerts by themselves.
+- [x] Add typed domain types and a Supabase repository layer.
+- [x] Implement the rolling 30-day personal baseline in the frontend domain adapter.
+- [x] Implement the `>3 SD` single-reading alert rule with tests.
+- [x] Implement the `>2 SD on 3 of the last 5 days` sustained-shift rule with tests.
+- [x] Include a plain-language reason with every generated alert.
+- [x] Add usual, recovery-concern, and sensor-disconnected scenarios in the frontend flow.
+- [x] Add stale-data and offline UI states; backend insufficient-baseline and missing-data contracts remain pending.
+- [x] Ensure exercise-related heart-rate changes do not trigger recovery alerts by themselves.
 
 **Exit check:** Alert decisions are deterministic, explainable, unit-tested, and independent from the UI.
 
 ### Phase 3 — Active astronaut flow
 
-- [ ] Add profile selection and Active stage setup.
-- [ ] Add simulated data controls.
-- [ ] Build the Home dashboard with current signals and next action.
-- [ ] Build Trends with personal baseline overlays and alert markers.
-- [ ] Build the optional wellbeing check-in.
-- [ ] Build next-action guidance with data limitations.
-- [ ] Build the follow-up timeline.
+- [x] Add profile selection and Active stage setup.
+- [x] Add simulated data controls.
+- [x] Build the Home dashboard with current signals and next action.
+- [x] Build Trends with personal baseline overlays and alert markers.
+- [x] Build the optional wellbeing check-in.
+- [x] Build next-action guidance with data limitations.
+- [x] Build the follow-up timeline.
 
 **Exit check:** The complete active flow works from simulated data through alert explanation, check-in, action, and follow-up.
 
 ### Phase 4 — Candidate / trainee preview
 
-- [ ] Add Future/Trainee stage content.
-- [ ] Add one short metric or sensor lesson.
-- [ ] Add one practice scenario with feedback.
-- [ ] Store learning progress locally.
-- [ ] Explicitly avoid presenting learning progress as flight clearance or certification.
+- [x] Add Future/Trainee stage content.
+- [x] Add one short metric or sensor lesson.
+- [x] Add one practice scenario with feedback.
+- [x] Store learning progress locally.
+- [x] Explicitly avoid presenting learning progress as flight clearance or certification.
 
 **Exit check:** One trainee lesson is demonstrable without expanding into a separate game product.
 
 ### Phase 5 — Post-mission / retired preview
 
-- [ ] Add Retired/Post-mission stage content.
-- [ ] Add long-term trend preview.
-- [ ] Add mood, stress, sleep, and journal check-in preview.
-- [ ] Add reminder UI without medical claims.
-- [ ] Add a clinician-summary preview with selectable fields only.
+- [x] Add Retired/Post-mission stage content.
+- [x] Add long-term trend preview.
+- [x] Add mood, stress, sleep, and journal check-in preview.
+- [x] Add reminder UI without medical claims.
+- [x] Add a clinician-summary preview with selectable fields only.
 
 **Exit check:** Retired users can review trends and prepare a non-diagnostic summary without requiring historical mission data.
 
 ### Phase 6 — Radiation and public NASA context
 
-- [ ] Add radiation dose versus personal synthetic baseline.
-- [ ] Add Safe/Caution/High display with a clear explanation.
-- [ ] Add optional NASA DONKI solar-event lookup.
-- [ ] Cache DONKI responses and handle rate limits.
-- [ ] Fall back to labeled mock events when DONKI is unavailable.
-- [ ] Link NASA OSDR and NTRS references from About and Limits.
+- [x] Add radiation dose versus personal synthetic baseline.
+- [x] Add Safe/Caution/High display with a clear explanation.
+- [x] Add optional NASA DONKI solar-event lookup.
+- [x] Cache DONKI responses and handle rate limits.
+- [x] Fall back to labeled mock events when DONKI is unavailable.
+- [x] Link NASA OSDR and NTRS references from About and Limits.
 
 **Exit check:** NASA services enrich the demo but are never required for core monitoring or alert behavior.
 
 ### Phase 7 — Quality, privacy, and presentation
 
-- [ ] Add responsive dark space-themed styling.
-- [ ] Add LocalStorage persistence for check-ins, preferences, replay state, and seed.
-- [ ] Add per-category privacy controls.
-- [ ] Add unit tests for alert logic and synthetic-data generation.
-- [ ] Add UI tests for stage switching, fallback states, and persistence.
-- [ ] Test offline operation and refresh behavior.
-- [ ] Audit all copy for diagnosis, clinical certainty, and medical-device implications.
-- [ ] Run the production build and smoke-test the complete demo flow.
+- [x] Add responsive dark space-themed styling.
+- [x] Add LocalStorage persistence for check-ins, preferences, replay state, and seed.
+- [x] Add per-category privacy controls.
+- [x] Add unit tests for alert logic; backend synthetic-data tests are on Agent 1's branch.
+- [x] Add UI tests for stage switching, fallback states, persistence, and Future/Retired previews.
+- [x] Test offline operation and refresh behavior in the frontend simulation and UI suite.
+- [x] Audit all current frontend copy for diagnosis, clinical certainty, and medical-device implications.
+- [x] Run the production build and smoke-test the complete demo flow through the automated Active-flow UI suite and production-server HTTP check.
 
 **Exit check:** The demo is stable, responsive, clearly synthetic, and safe to present to judges.
 
@@ -167,9 +195,9 @@ Complete phases in order. Do not mark a phase complete until its verification ch
 
 ## 👥 Team Task Delegation
 
-The user is Agent 1 and owns frontend work. The teammate is Agent 2 and owns backend/data work. This section is documentation only until each agent receives a specific task prompt.
+Device Agent 2 owns frontend and UX work. Device Agent 1 owns backend and data work. This section is documentation only until each agent receives a specific task prompt.
 
-### Agent 1 — Frontend and UX Owner
+### Agent 2 — Frontend and UX Owner
 
 Owns:
 
@@ -182,14 +210,14 @@ Owns:
 - LocalStorage state;
 - accessibility and UI tests.
 
-Agent 1 must use mocked or typed placeholder data until Agent 2's contract is available, avoid changing Supabase schema or alert thresholds, keep UI components independent from direct Supabase queries, update this file after completed frontend milestones, and run `npm run build` before reporting completion.
+Agent 2 must use mocked or typed placeholder data until Agent 1's contract is available, avoid changing Supabase schema or alert thresholds, keep UI components independent from direct Supabase queries, update this file after completed frontend milestones, and run `npm run build` before reporting completion.
 
 Suggested prompt:
 
 ```text
-Read AGENTS.md first. You are Agent 1, the frontend owner.
+Read AGENTS.md first. You are Device Agent 2, the frontend owner.
 
-Implement only the current frontend task from the Agent 1 section:
+Implement only the current frontend task from the Agent 2 section:
 [insert one specific frontend task]
 
 Do not modify Supabase schema, RLS, seed data, or alert thresholds.
@@ -198,7 +226,7 @@ Run npm run build and relevant tests.
 Update AGENTS.md with completed work, remaining work, and the next frontend task.
 ```
 
-### Agent 2 — Backend and Data Owner
+### Agent 1 — Backend and Data Owner
 
 Owns:
 
@@ -212,14 +240,14 @@ Owns:
 - NASA DONKI integration and fallback;
 - backend and data tests.
 
-Agent 2 must read the Supabase and Postgres best-practice skills before schema work, keep all data synthetic, never expose service-role credentials, define shared TypeScript types before frontend integration, document schema and query contracts, run database checks and `npm run build`, and update this file with completed work, remaining work, blockers, and the next backend task.
+Agent 1 must read the Supabase and Postgres best-practice skills before schema work, keep all data synthetic, never expose service-role credentials, define shared TypeScript types before frontend integration, document schema and query contracts, run database checks and `npm run build`, and update this file with completed work, remaining work, blockers, and the next backend task.
 
 Suggested prompt:
 
 ```text
-Read AGENTS.md first. You are Agent 2, the backend and data owner.
+Read AGENTS.md first. You are Device Agent 1, the backend and data owner.
 
-Implement only the current backend task from the Agent 2 section:
+Implement only the current backend task from the Agent 1 section:
 [insert one specific backend task]
 
 Do not redesign the frontend.
@@ -249,72 +277,86 @@ Initial shared types:
 
 ### Step-by-Step Integration Workflow
 
-1. Agent 2 creates the schema, seed data, domain types, repository, and alert module.
-2. Agent 2 verifies the database, tests, and build.
-3. Agent 2 pushes backend work to a dedicated branch and opens a pull request.
-4. Agent 1 continues UI work using the shared types or temporary mock data.
-5. Agent 1 pulls or merges the backend branch after the contract is stable.
-6. Agent 1 replaces mock repository calls with the typed backend repository.
+1. Agent 1 creates the schema, seed data, domain types, repository, and alert module.
+2. Agent 1 verifies the database, tests, and build.
+3. Agent 1 pushes backend work to a dedicated branch and opens a pull request.
+4. Agent 2 continues UI work using the shared types or temporary mock data.
+5. Agent 2 pulls or merges the backend branch after the contract is stable.
+6. Agent 2 replaces mock repository calls with the typed backend repository.
 7. Both agents run `npm install`, `npm run build`, unit tests, database/RLS checks, and a manual active-flow smoke test.
-8. Database and data conflicts are resolved by Agent 2, layout and interaction conflicts by Agent 1, and shared-type conflicts together.
+8. Database and data conflicts are resolved by Agent 1, layout and interaction conflicts by Agent 2, and shared-type conflicts together.
 9. Both agents update this file with the integrated status.
 10. Merge the verified pull request into `main`.
 
 ### Branch Ownership
 
-- Agent 1 branch: `codex/frontend-flow`
-- Agent 2 branch: `codex/backend-data`
+- Agent 1 branch: `codex/backend-data`
+- Agent 2 branch: `codex/frontend-flow`
 - Optional integration branch: `codex/integration`
 - `main` remains the stable branch.
 - Neither agent pushes unfinished work directly to `main`.
 
 ## 📋 Team Progress Checklists
 
-### Agent 1 — Frontend Checklist
+### Agent 2 — Frontend Checklist
 
-- [ ] Build the app shell and responsive navigation.
-- [ ] Add the dark, high-contrast Horizon design system.
-- [ ] Build Active Home with mocked typed data.
-- [ ] Build Trends with baseline and alert placeholders.
-- [ ] Build Wellbeing and LocalStorage check-ins.
-- [ ] Build Profile and simulation controls.
-- [ ] Add Future and Retired preview states.
-- [ ] Add accessibility and UI tests.
-- [ ] Integrate Agent 2's repository contract.
-- [ ] Verify the complete Active Astronaut flow.
+- [x] Build the app shell and responsive navigation.
+- [x] Add the dark, high-contrast Horizon design system.
+- [x] Build Active Home with mocked typed data.
+- [x] Build Trends with baseline and alert placeholders.
+- [x] Build Wellbeing and LocalStorage check-ins.
+- [x] Build Profile and simulation controls.
+- [x] Add Future and Retired preview states.
+- [x] Add initial accessibility and UI smoke tests.
+- [x] Add stale, disconnected, and offline frontend state messaging.
+- [x] Add UI coverage for recovery alerts, stale-data messaging, navigation, and LocalStorage check-ins.
+- [x] Add accessible loading feedback for simulated scenario changes.
+- [x] Isolate UI data access behind a typed mock repository adapter.
+- [x] Make the local “Talk to a person” support action functional.
+- [x] Make shell labels and mobile active navigation stage-aware and accessible.
+- [x] Add an expandable plain-language explanation for trend alert markers.
+- [x] Add LocalStorage-backed simulation seed and replay controls.
+- [x] Pass typed seed and replay controls through the frontend repository boundary.
+- [x] Import Agent 1's verified shared domain and repository contract files.
+- [x] Add the typed backend-to-dashboard mapping adapter and source/warning preservation.
+- [x] Verify the complete mock Active Astronaut flow from alert to local check-in.
+- [x] Verify the disconnected-source fallback and “Data unavailable” copy.
+- [x] Verify wellbeing privacy choices persist in LocalStorage.
+- [x] Verify offline Trends fallback and recovery guidance.
+- [x] Integrate Agent 1's repository contract for the usual-day flow, with deterministic local fallback.
+- [x] Import Agent 1's replay/data-quality contract and map its quality warnings into the UI.
 
-### Agent 2 — Backend Checklist
+### Agent 1 — Backend Checklist
 
-- [ ] Confirm access to the configured Supabase project.
-- [ ] Create migrations for `sample_people`, `health_observations`, and `demo_events`.
-- [ ] Enable RLS and verify read-only synthetic-data policies.
-- [ ] Seed four profiles and 180 days of observations.
-- [ ] Add the radiation, illness-like, and sleep-disruption events.
-- [ ] Add typed domain models and repository functions.
-- [ ] Implement baseline and explainable alert rules.
-- [ ] Add simulation scenarios and deterministic replay.
-- [ ] Add NASA DONKI caching and mock fallback.
-- [ ] Add backend/data tests and integration documentation.
+- [x] Confirm access to the configured Supabase project.
+- [x] Create migrations for `sample_people`, `health_observations`, and `demo_events`.
+- [x] Enable RLS and verify read-only synthetic-data policies.
+- [x] Seed four profiles and 180 days of observations.
+- [x] Add the radiation, illness-like, and sleep-disruption events.
+- [x] Add typed domain models and repository functions.
+- [x] Implement baseline and explainable alert rules.
+- [x] Add simulation scenarios and deterministic replay.
+- [x] Add NASA DONKI caching and mock fallback through the shared frontend adapter.
+- [x] Add backend/data tests and integration documentation.
 
 ### Shared Integration Checklist
 
-- [ ] Agree on the shared TypeScript types.
-- [ ] Confirm repository function names and return shapes.
-- [ ] Confirm alert severity and explanation fields.
-- [ ] Merge backend contract into the frontend branch.
-- [ ] Replace frontend mocks with repository calls.
-- [ ] Run build, unit tests, RLS checks, and active-flow smoke test.
-- [ ] Review synthetic-data labels and safety copy.
+- [x] Agree on the shared TypeScript types.
+- [x] Confirm repository function names and return shapes.
+- [x] Confirm alert severity and explanation fields for the current frontend adapter.
+- [x] Import the verified backend contract into the frontend branch.
+- [x] Replace the usual-day frontend mock with repository calls and retain local fallback.
+- [x] Run the combined build, unit tests, RLS checks, and active-flow smoke test after branch integration.
+- [x] Review synthetic-data labels and safety copy for the frontend flow.
 - [ ] Merge the verified integration pull request into `main`.
 
 ### Current Blockers
 
-- Supabase management access currently returns a permission error for the configured project.
-- The teammate must complete the Agent 2 backend work before the frontend can use live repository data.
+- Browser automation is unavailable in the current Codex Work settings; automated Active-flow coverage and the production-server HTTP smoke check pass.
 
 ### Next Coordination Point
 
-After Agent 2 publishes the shared types and repository contract, Agent 1 replaces the frontend mock data with the backend repository and both agents run the integration checklist.
+The integration branch is verified and pushed as `d57085b`. Next coordination point: review and merge its pull request into `main`.
 
 ## 📈 Delegated Progress Rules
 

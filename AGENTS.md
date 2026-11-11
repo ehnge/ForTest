@@ -40,6 +40,7 @@ Horizon is a research demo health companion for space travelers. It uses synthet
 - **Backend quality integration:** The frontend imports backend commit `9294452` and maps repository quality metadata into current, stale, disconnected, offline, and insufficient-baseline UI states.
 - **Future/Retired guidance previews:** Guidance now includes a locally saved trainee lesson, a non-certifying practice explanation, long-term follow-up placeholders, and a private post-mission reflection.
 - **Retired summary preview:** Retired guidance includes locally persisted, selectable synthetic fields for a non-diagnostic conversation summary.
+- **About and limits:** Guidance links NASA NTRS and OSDR and states the synthetic, non-diagnostic research-demo limits.
 - **Integration verification:** Backend unit tests (9), backend build, and live publishable-key parity checks (4 profiles, 4,320 observations, 12 events) pass; frontend tests (18), build, and diff checks pass.
 
 ### 🟡 Active Focus
@@ -134,7 +135,7 @@ Complete phases in order. Do not mark a phase complete until its verification ch
 - [x] Add optional NASA DONKI solar-event lookup.
 - [x] Cache DONKI responses and handle rate limits.
 - [x] Fall back to labeled mock events when DONKI is unavailable.
-- [ ] Link NASA OSDR and NTRS references from About and Limits.
+- [x] Link NASA OSDR and NTRS references from About and Limits.
 
 **Exit check:** NASA services enrich the demo but are never required for core monitoring or alert behavior.
 
@@ -146,7 +147,7 @@ Complete phases in order. Do not mark a phase complete until its verification ch
 - [x] Add unit tests for alert logic; backend synthetic-data tests are on Agent 1's branch.
 - [x] Add UI tests for stage switching, fallback states, persistence, and Future/Retired previews.
 - [x] Test offline operation and refresh behavior in the frontend simulation and UI suite.
-- [ ] Audit all copy for diagnosis, clinical certainty, and medical-device implications.
+- [x] Audit all current frontend copy for diagnosis, clinical certainty, and medical-device implications.
 - [ ] Run the production build and smoke-test the complete demo flow.
 
 **Exit check:** The demo is stable, responsive, clearly synthetic, and safe to present to judges.

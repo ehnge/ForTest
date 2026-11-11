@@ -164,3 +164,162 @@ Complete phases in order. Do not mark a phase complete until its verification ch
 6. Never claim a task is complete without running the relevant build, test, or verification command.
 7. Preserve existing user changes and do not overwrite unrelated work.
 8. Keep this roadmap concise and factual; never record secrets or private data.
+
+## 👥 Team Task Delegation
+
+The user is Agent 1 and owns frontend work. The teammate is Agent 2 and owns backend/data work. This section is documentation only until each agent receives a specific task prompt.
+
+### Agent 1 — Frontend and UX Owner
+
+Owns:
+
+- app shell and navigation;
+- dark responsive design system;
+- Active Home screen;
+- Trends screen;
+- Wellbeing screen;
+- Profile and simulation controls;
+- LocalStorage state;
+- accessibility and UI tests.
+
+Agent 1 must use mocked or typed placeholder data until Agent 2's contract is available, avoid changing Supabase schema or alert thresholds, keep UI components independent from direct Supabase queries, update this file after completed frontend milestones, and run `npm run build` before reporting completion.
+
+Suggested prompt:
+
+```text
+Read AGENTS.md first. You are Agent 1, the frontend owner.
+
+Implement only the current frontend task from the Agent 1 section:
+[insert one specific frontend task]
+
+Do not modify Supabase schema, RLS, seed data, or alert thresholds.
+Use typed mock data when backend data is not ready.
+Run npm run build and relevant tests.
+Update AGENTS.md with completed work, remaining work, and the next frontend task.
+```
+
+### Agent 2 — Backend and Data Owner
+
+Owns:
+
+- Supabase migrations;
+- RLS policies;
+- synthetic data generation;
+- seeded sample profiles and observations;
+- typed repository functions;
+- baseline and alert logic;
+- simulation scenarios;
+- NASA DONKI integration and fallback;
+- backend and data tests.
+
+Agent 2 must read the Supabase and Postgres best-practice skills before schema work, keep all data synthetic, never expose service-role credentials, define shared TypeScript types before frontend integration, document schema and query contracts, run database checks and `npm run build`, and update this file with completed work, remaining work, blockers, and the next backend task.
+
+Suggested prompt:
+
+```text
+Read AGENTS.md first. You are Agent 2, the backend and data owner.
+
+Implement only the current backend task from the Agent 2 section:
+[insert one specific backend task]
+
+Do not redesign the frontend.
+Use synthetic data only.
+Read the Supabase and Postgres best-practice instructions before database changes.
+Run verification queries, tests, and npm run build.
+Update AGENTS.md with completed work, remaining work, blockers, and the next backend task.
+```
+
+### Shared Contracts
+
+- Shared types live in one agreed location and must be reviewed by both agents.
+- Frontend components do not query Supabase directly.
+- Backend exposes typed repository functions.
+- Alert thresholds belong to backend/domain logic, not UI logic.
+- Schema changes require a migration and RLS verification.
+- Changes to shared types require coordination and a build check.
+
+Initial shared types:
+
+- `LifeStage`
+- `MetricName`
+- `Observation`
+- `Alert`
+- `SimulationScenario`
+- `DataQualityState`
+
+### Step-by-Step Integration Workflow
+
+1. Agent 2 creates the schema, seed data, domain types, repository, and alert module.
+2. Agent 2 verifies the database, tests, and build.
+3. Agent 2 pushes backend work to a dedicated branch and opens a pull request.
+4. Agent 1 continues UI work using the shared types or temporary mock data.
+5. Agent 1 pulls or merges the backend branch after the contract is stable.
+6. Agent 1 replaces mock repository calls with the typed backend repository.
+7. Both agents run `npm install`, `npm run build`, unit tests, database/RLS checks, and a manual active-flow smoke test.
+8. Database and data conflicts are resolved by Agent 2, layout and interaction conflicts by Agent 1, and shared-type conflicts together.
+9. Both agents update this file with the integrated status.
+10. Merge the verified pull request into `main`.
+
+### Branch Ownership
+
+- Agent 1 branch: `codex/frontend-flow`
+- Agent 2 branch: `codex/backend-data`
+- Optional integration branch: `codex/integration`
+- `main` remains the stable branch.
+- Neither agent pushes unfinished work directly to `main`.
+
+## 📋 Team Progress Checklists
+
+### Agent 1 — Frontend Checklist
+
+- [ ] Build the app shell and responsive navigation.
+- [ ] Add the dark, high-contrast Horizon design system.
+- [ ] Build Active Home with mocked typed data.
+- [ ] Build Trends with baseline and alert placeholders.
+- [ ] Build Wellbeing and LocalStorage check-ins.
+- [ ] Build Profile and simulation controls.
+- [ ] Add Future and Retired preview states.
+- [ ] Add accessibility and UI tests.
+- [ ] Integrate Agent 2's repository contract.
+- [ ] Verify the complete Active Astronaut flow.
+
+### Agent 2 — Backend Checklist
+
+- [ ] Confirm access to the configured Supabase project.
+- [ ] Create migrations for `sample_people`, `health_observations`, and `demo_events`.
+- [ ] Enable RLS and verify read-only synthetic-data policies.
+- [ ] Seed four profiles and 180 days of observations.
+- [ ] Add the radiation, illness-like, and sleep-disruption events.
+- [ ] Add typed domain models and repository functions.
+- [ ] Implement baseline and explainable alert rules.
+- [ ] Add simulation scenarios and deterministic replay.
+- [ ] Add NASA DONKI caching and mock fallback.
+- [ ] Add backend/data tests and integration documentation.
+
+### Shared Integration Checklist
+
+- [ ] Agree on the shared TypeScript types.
+- [ ] Confirm repository function names and return shapes.
+- [ ] Confirm alert severity and explanation fields.
+- [ ] Merge backend contract into the frontend branch.
+- [ ] Replace frontend mocks with repository calls.
+- [ ] Run build, unit tests, RLS checks, and active-flow smoke test.
+- [ ] Review synthetic-data labels and safety copy.
+- [ ] Merge the verified integration pull request into `main`.
+
+### Current Blockers
+
+- Supabase management access currently returns a permission error for the configured project.
+- The teammate must complete the Agent 2 backend work before the frontend can use live repository data.
+
+### Next Coordination Point
+
+After Agent 2 publishes the shared types and repository contract, Agent 1 replaces the frontend mock data with the backend repository and both agents run the integration checklist.
+
+## 📈 Delegated Progress Rules
+
+- Each agent updates only its owned checklist after verified work.
+- Completed tasks move into Currently Built when the behavior is verified.
+- Incomplete tasks stay unchecked.
+- Every blocker must include the exact error or missing dependency.
+- No feature implementation starts from this section alone; each agent should receive one specific task prompt.

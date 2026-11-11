@@ -7,6 +7,7 @@ import { mockDashboardRepository } from "./lib/mockDashboardRepository";
 import { supabase, supabaseConfigured } from "./lib/supabase";
 import { usePersistedState } from "./lib/usePersistedState";
 import type { DashboardSnapshot } from "./lib/dashboardRepository";
+import { fetchRecentSolarEvents, type SolarEventResult } from "./lib/nasaDonki";
 import type { LifeStage, SimulationScenario } from "./types/horizon";
 
 export default function App() {
@@ -25,6 +26,7 @@ export default function App() {
   const [backendSnapshot, setBackendSnapshot] = useState<DashboardSnapshot | null>(null);
   const [dataSource, setDataSource] = useState<DashboardSource>("local");
   const [dataWarning, setDataWarning] = useState<string | undefined>();
+  const [solarEvents, setSolarEvents] = useState<SolarEventResult | null>(null);
   const loadingTimer = useRef<number | undefined>(undefined);
 
   const profile = profiles.find((candidate) => candidate.id === profileId) ?? profiles[0];
@@ -45,6 +47,12 @@ export default function App() {
   };
 
   useEffect(() => () => window.clearTimeout(loadingTimer.current), []);
+
+  useEffect(() => {
+    let cancelled = false;
+    void fetchRecentSolarEvents().then((result) => { if (!cancelled) setSolarEvents(result); });
+    return () => { cancelled = true; };
+  }, []);
 
   useEffect(() => {
     if (scenario !== "usual") {
@@ -111,7 +119,7 @@ export default function App() {
         return <ProfileView profile={profile} profiles={profiles} stage={stage} scenario={scenario} seed={seed} replayCount={replayCount} loading={viewLoading} onProfileChange={setProfileId} onScenarioChange={setScenarioWithLoading} onSeedChange={setSeedWithLoading} onReplay={replayEvents} onStageChange={setStageAndProfile} />;
       case "home":
       default:
-        return <HomeView profile={profile} stage={stage} scenario={scenario} metrics={dashboard.metrics} alert={dashboard.alert} dataQuality={dataQuality} loading={viewLoading} source={viewSource} warning={viewWarning} onViewChange={setActiveView} />;
+        return <HomeView profile={profile} stage={stage} scenario={scenario} metrics={dashboard.metrics} alert={dashboard.alert} dataQuality={dataQuality} loading={viewLoading} source={viewSource} warning={viewWarning} solarEvents={solarEvents} onViewChange={setActiveView} />;
     }
   })();
 

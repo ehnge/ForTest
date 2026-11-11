@@ -22,7 +22,8 @@ Horizon is a research demo health companion for space travelers. It uses synthet
 - **Stage-aware previews:** Home copy now changes for Future, Active, and Retired stages while the Active flow remains primary.
 - **Frontend loading boundary:** Scenario changes show an accessible loading state before the selected simulated signals render.
 - **Frontend repository boundary:** UI state reads typed profiles and snapshots through `DashboardRepository`; the current adapter is mock-only and replaceable.
-- **Frontend verification:** Browser smoke checks confirmed stage switching and Trends navigation; five UI tests, `npm run build`, and `git diff --check` pass.
+- **Wellbeing support action:** The “Talk to a person” panel opens local crew, mission-support, and family-contact options without sending data.
+- **Frontend verification:** Browser smoke checks confirmed stage switching and Trends navigation; six UI tests, `npm run build`, and `git diff --check` pass.
 
 ### 🟡 Active Focus
 
@@ -291,6 +292,7 @@ Initial shared types:
 - [x] Add UI coverage for recovery alerts, stale-data messaging, navigation, and LocalStorage check-ins.
 - [x] Add accessible loading feedback for simulated scenario changes.
 - [x] Isolate UI data access behind a typed mock repository adapter.
+- [x] Make the local “Talk to a person” support action functional.
 - [ ] Integrate Agent 2's repository contract.
 - [ ] Verify the complete Active Astronaut flow.
 

@@ -72,4 +72,16 @@ describe("Horizon app shell", () => {
     expect(screen.getByText("Saved on this device")).toBeInTheDocument();
     expect(window.localStorage.getItem("horizon:wellbeing")).toContain("Felt steady after exercise.");
   });
+
+  it("opens local support options without sending a message", async () => {
+    const user = userEvent.setup();
+    render(<App />);
+
+    await user.click(screen.getAllByRole("button", { name: "Wellbeing" })[0]);
+    await user.click(screen.getByRole("button", { name: "Open support options" }));
+
+    expect(screen.getByRole("region", { name: "Support options" })).toBeInTheDocument();
+    expect(screen.getByText("Crew medic")).toBeInTheDocument();
+    expect(screen.getByText(/This demo does not send messages/)).toBeInTheDocument();
+  });
 });

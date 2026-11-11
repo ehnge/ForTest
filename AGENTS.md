@@ -39,6 +39,7 @@ Horizon is a research demo health companion for space travelers. It uses synthet
 - **NASA radiation context:** `src/lib/nasaDonki.ts` fetches optional DONKI CME events with browser caching and a labeled mock fallback; Home displays a non-diagnostic Safe/Caution/High radiation context card.
 - **Backend quality integration:** The frontend imports backend commit `9294452` and maps repository quality metadata into current, stale, disconnected, offline, and insufficient-baseline UI states.
 - **Future/Retired guidance previews:** Guidance now includes a locally saved trainee lesson, a non-certifying practice explanation, long-term follow-up placeholders, and a private post-mission reflection.
+- **Retired summary preview:** Retired guidance includes locally persisted, selectable synthetic fields for a non-diagnostic conversation summary.
 - **Integration verification:** Backend unit tests (9), backend build, and live publishable-key parity checks (4 profiles, 4,320 observations, 12 events) pass; frontend tests (18), build, and diff checks pass.
 
 ### 🟡 Active Focus
@@ -122,7 +123,7 @@ Complete phases in order. Do not mark a phase complete until its verification ch
 - [x] Add long-term trend preview.
 - [x] Add mood, stress, sleep, and journal check-in preview.
 - [x] Add reminder UI without medical claims.
-- [ ] Add a clinician-summary preview with selectable fields only.
+- [x] Add a clinician-summary preview with selectable fields only.
 
 **Exit check:** Retired users can review trends and prepare a non-diagnostic summary without requiring historical mission data.
 

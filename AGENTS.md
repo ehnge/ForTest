@@ -33,23 +33,26 @@ Horizon is a research demo health companion for space travelers. It uses synthet
 - **Disconnected fallback verification:** The UI test suite verifies the “Data unavailable” label and reason when the simulated source disconnects.
 - **Privacy persistence verification:** The UI test suite verifies that a per-category wellbeing privacy toggle persists locally.
 - **Offline fallback verification:** The UI test suite verifies that offline Trends show a recovery path instead of stale charts.
-- **Frontend verification:** Browser smoke checks confirmed stage switching and Trends navigation; 16 tests, `npm run build`, and `git diff --check` pass after repository integration and alert-engine coverage.
+- **Frontend verification:** Browser smoke checks confirmed stage switching and Trends navigation; 21 tests, `npm run build`, and `git diff --check` pass after repository integration, NASA context, Future/Retired coverage, and refresh persistence coverage.
 - **Backend adapter wiring:** The usual-day app flow now loads profiles and observations through the typed `HorizonRepository`; explicit demo scenarios remain local fixtures, and Home shows the data source and fallback warning.
 - **Explainable alert engine:** `src/domain/alertEngine.ts` now evaluates personal 30-day baselines, single-reading and sustained-shift rules, emits plain-language reasons, and ignores exercise heart-rate readings; 16 tests pass.
 - **NASA radiation context:** `src/lib/nasaDonki.ts` fetches optional DONKI CME events with browser caching and a labeled mock fallback; Home displays a non-diagnostic Safe/Caution/High radiation context card.
 - **Backend quality integration:** The frontend imports backend commit `9294452` and maps repository quality metadata into current, stale, disconnected, offline, and insufficient-baseline UI states.
-- **Integration branch:** `codex/integration` now includes the verified frontend flow, backend migration/seed/verification assets, replay/data-quality contract, and combined backend scripts; the package scripts preserve both frontend and backend test commands.
+- **Verified integration branch:** `codex/integration` includes the frontend flow, backend migration/seed scripts, backend replay/data-quality contract, NASA radiation adapter, and combined test scripts.
+- **Future/Retired guidance previews:** Guidance now includes a locally saved trainee lesson, a non-certifying practice explanation, long-term follow-up placeholders, and a private post-mission reflection.
+- **Retired summary preview:** Retired guidance includes locally persisted, selectable synthetic fields for a non-diagnostic conversation summary.
+- **About and limits:** Guidance links NASA NTRS and OSDR and states the synthetic, non-diagnostic research-demo limits.
 - **Integration verification:** Backend unit tests (9), backend build, and live publishable-key parity checks (4 profiles, 4,320 observations, 12 events) pass; frontend tests (18), build, and diff checks pass.
 
 ### 🟡 Active Focus
 
 > **AGENT NOTE:** The user explicitly authorized frontend work with typed mock data while the backend contract is pending. Do not connect live Supabase data until Agent 1 publishes the shared repository contract.
 
-- **Immediate task:** Run the combined verification on `codex/integration`, then complete the manual active-flow smoke test before opening the integration pull request.
+- **Immediate task:** Run the combined verification on `codex/integration`, then complete the manual active-flow smoke test before opening the pull request into `main`.
 - **Required tables:** `sample_people`, `health_observations`, and `demo_events`.
 - **Required seed:** Four synthetic travelers with 180 days of observations.
 - **Security requirement:** Enable RLS on every exposed table and allow only the intended synthetic-data reads.
-- **Current blocker:** Browser automation is unavailable in the current Codex Work settings, so the active-flow smoke test must be completed manually or in a browser-enabled session; automated and live database checks are next.
+- **Current blocker:** Browser automation is unavailable in the current Codex Work settings, so the active-flow smoke test must be completed manually or in a browser-enabled session; all automated and live database checks pass.
 
 ## 🧭 Implementation Roadmap
 
@@ -96,33 +99,33 @@ Complete phases in order. Do not mark a phase complete until its verification ch
 
 ### Phase 3 — Active astronaut flow
 
-- [ ] Add profile selection and Active stage setup.
-- [ ] Add simulated data controls.
-- [ ] Build the Home dashboard with current signals and next action.
-- [ ] Build Trends with personal baseline overlays and alert markers.
-- [ ] Build the optional wellbeing check-in.
-- [ ] Build next-action guidance with data limitations.
-- [ ] Build the follow-up timeline.
+- [x] Add profile selection and Active stage setup.
+- [x] Add simulated data controls.
+- [x] Build the Home dashboard with current signals and next action.
+- [x] Build Trends with personal baseline overlays and alert markers.
+- [x] Build the optional wellbeing check-in.
+- [x] Build next-action guidance with data limitations.
+- [x] Build the follow-up timeline.
 
 **Exit check:** The complete active flow works from simulated data through alert explanation, check-in, action, and follow-up.
 
 ### Phase 4 — Candidate / trainee preview
 
-- [ ] Add Future/Trainee stage content.
-- [ ] Add one short metric or sensor lesson.
-- [ ] Add one practice scenario with feedback.
-- [ ] Store learning progress locally.
-- [ ] Explicitly avoid presenting learning progress as flight clearance or certification.
+- [x] Add Future/Trainee stage content.
+- [x] Add one short metric or sensor lesson.
+- [x] Add one practice scenario with feedback.
+- [x] Store learning progress locally.
+- [x] Explicitly avoid presenting learning progress as flight clearance or certification.
 
 **Exit check:** One trainee lesson is demonstrable without expanding into a separate game product.
 
 ### Phase 5 — Post-mission / retired preview
 
-- [ ] Add Retired/Post-mission stage content.
-- [ ] Add long-term trend preview.
-- [ ] Add mood, stress, sleep, and journal check-in preview.
-- [ ] Add reminder UI without medical claims.
-- [ ] Add a clinician-summary preview with selectable fields only.
+- [x] Add Retired/Post-mission stage content.
+- [x] Add long-term trend preview.
+- [x] Add mood, stress, sleep, and journal check-in preview.
+- [x] Add reminder UI without medical claims.
+- [x] Add a clinician-summary preview with selectable fields only.
 
 **Exit check:** Retired users can review trends and prepare a non-diagnostic summary without requiring historical mission data.
 
@@ -133,7 +136,7 @@ Complete phases in order. Do not mark a phase complete until its verification ch
 - [x] Add optional NASA DONKI solar-event lookup.
 - [x] Cache DONKI responses and handle rate limits.
 - [x] Fall back to labeled mock events when DONKI is unavailable.
-- [ ] Link NASA OSDR and NTRS references from About and Limits.
+- [x] Link NASA OSDR and NTRS references from About and Limits.
 
 **Exit check:** NASA services enrich the demo but are never required for core monitoring or alert behavior.
 
@@ -143,9 +146,9 @@ Complete phases in order. Do not mark a phase complete until its verification ch
 - [x] Add LocalStorage persistence for check-ins, preferences, replay state, and seed.
 - [x] Add per-category privacy controls.
 - [x] Add unit tests for alert logic; backend synthetic-data tests are on Agent 1's branch.
-- [x] Add UI tests for stage switching, fallback states, and persistence.
-- [ ] Test offline operation and refresh behavior.
-- [ ] Audit all copy for diagnosis, clinical certainty, and medical-device implications.
+- [x] Add UI tests for stage switching, fallback states, persistence, and Future/Retired previews.
+- [x] Test offline operation and refresh behavior in the frontend simulation and UI suite.
+- [x] Audit all current frontend copy for diagnosis, clinical certainty, and medical-device implications.
 - [ ] Run the production build and smoke-test the complete demo flow.
 
 **Exit check:** The demo is stable, responsive, clearly synthetic, and safe to present to judges.

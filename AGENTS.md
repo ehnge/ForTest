@@ -10,7 +10,7 @@ Horizon is a research demo health companion for space travelers. It uses synthet
 - **Supabase dependency:** `@supabase/supabase-js` is installed.
 - **Supabase client:** Browser client exists in `src/lib/supabase.ts`.
 - **Environment setup:** `.env.example` is committed and `.env.local` is ignored.
-- **Connection test page:** `src/App.tsx` checks Supabase configuration and queries `sample_people`.
+- **Supabase boundary:** `src/lib/supabase.ts` keeps the browser client available; the app currently uses the typed mock repository until the backend contract is published.
 - **Safety disclaimer:** The placeholder page displays: `Simulated data. Not medical advice. Not diagnostic.`
 - **Build verification:** `npm run build` passes.
 - **Git:** Initial local commit exists and `origin` points to the HEXARA GitHub repository.
@@ -27,7 +27,7 @@ Horizon is a research demo health companion for space travelers. It uses synthet
 
 ### 🟡 Active Focus
 
-> **AGENT NOTE:** The user explicitly authorized frontend work with typed mock data while the backend contract is pending. Do not connect live Supabase data until Agent 2 publishes the shared repository contract.
+> **AGENT NOTE:** The user explicitly authorized frontend work with typed mock data while the backend contract is pending. Do not connect live Supabase data until Agent 1 publishes the shared repository contract.
 
 - **Immediate task:** Align `DashboardRepository` with Agent 1's published contract, then replace the mock adapter while keeping loading and data-quality states at the UI boundary.
 - **Required tables:** `sample_people`, `health_observations`, and `demo_events`.
@@ -175,9 +175,9 @@ Complete phases in order. Do not mark a phase complete until its verification ch
 
 ## 👥 Team Task Delegation
 
-The user is Agent 1 and owns frontend work. The teammate is Agent 2 and owns backend/data work. This section is documentation only until each agent receives a specific task prompt.
+Device Agent 2 owns frontend and UX work. Device Agent 1 owns backend and data work. This section is documentation only until each agent receives a specific task prompt.
 
-### Agent 1 — Frontend and UX Owner
+### Agent 2 — Frontend and UX Owner
 
 Owns:
 
@@ -190,14 +190,14 @@ Owns:
 - LocalStorage state;
 - accessibility and UI tests.
 
-Agent 1 must use mocked or typed placeholder data until Agent 2's contract is available, avoid changing Supabase schema or alert thresholds, keep UI components independent from direct Supabase queries, update this file after completed frontend milestones, and run `npm run build` before reporting completion.
+Agent 2 must use mocked or typed placeholder data until Agent 1's contract is available, avoid changing Supabase schema or alert thresholds, keep UI components independent from direct Supabase queries, update this file after completed frontend milestones, and run `npm run build` before reporting completion.
 
 Suggested prompt:
 
 ```text
-Read AGENTS.md first. You are Agent 1, the frontend owner.
+Read AGENTS.md first. You are Device Agent 2, the frontend owner.
 
-Implement only the current frontend task from the Agent 1 section:
+Implement only the current frontend task from the Agent 2 section:
 [insert one specific frontend task]
 
 Do not modify Supabase schema, RLS, seed data, or alert thresholds.
@@ -206,7 +206,7 @@ Run npm run build and relevant tests.
 Update AGENTS.md with completed work, remaining work, and the next frontend task.
 ```
 
-### Agent 2 — Backend and Data Owner
+### Agent 1 — Backend and Data Owner
 
 Owns:
 
@@ -220,14 +220,14 @@ Owns:
 - NASA DONKI integration and fallback;
 - backend and data tests.
 
-Agent 2 must read the Supabase and Postgres best-practice skills before schema work, keep all data synthetic, never expose service-role credentials, define shared TypeScript types before frontend integration, document schema and query contracts, run database checks and `npm run build`, and update this file with completed work, remaining work, blockers, and the next backend task.
+Agent 1 must read the Supabase and Postgres best-practice skills before schema work, keep all data synthetic, never expose service-role credentials, define shared TypeScript types before frontend integration, document schema and query contracts, run database checks and `npm run build`, and update this file with completed work, remaining work, blockers, and the next backend task.
 
 Suggested prompt:
 
 ```text
-Read AGENTS.md first. You are Agent 2, the backend and data owner.
+Read AGENTS.md first. You are Device Agent 1, the backend and data owner.
 
-Implement only the current backend task from the Agent 2 section:
+Implement only the current backend task from the Agent 1 section:
 [insert one specific backend task]
 
 Do not redesign the frontend.
@@ -257,28 +257,28 @@ Initial shared types:
 
 ### Step-by-Step Integration Workflow
 
-1. Agent 2 creates the schema, seed data, domain types, repository, and alert module.
-2. Agent 2 verifies the database, tests, and build.
-3. Agent 2 pushes backend work to a dedicated branch and opens a pull request.
-4. Agent 1 continues UI work using the shared types or temporary mock data.
-5. Agent 1 pulls or merges the backend branch after the contract is stable.
-6. Agent 1 replaces mock repository calls with the typed backend repository.
+1. Agent 1 creates the schema, seed data, domain types, repository, and alert module.
+2. Agent 1 verifies the database, tests, and build.
+3. Agent 1 pushes backend work to a dedicated branch and opens a pull request.
+4. Agent 2 continues UI work using the shared types or temporary mock data.
+5. Agent 2 pulls or merges the backend branch after the contract is stable.
+6. Agent 2 replaces mock repository calls with the typed backend repository.
 7. Both agents run `npm install`, `npm run build`, unit tests, database/RLS checks, and a manual active-flow smoke test.
-8. Database and data conflicts are resolved by Agent 2, layout and interaction conflicts by Agent 1, and shared-type conflicts together.
+8. Database and data conflicts are resolved by Agent 1, layout and interaction conflicts by Agent 2, and shared-type conflicts together.
 9. Both agents update this file with the integrated status.
 10. Merge the verified pull request into `main`.
 
 ### Branch Ownership
 
-- Agent 1 branch: `codex/frontend-flow`
-- Agent 2 branch: `codex/backend-data`
+- Agent 1 branch: `codex/backend-data`
+- Agent 2 branch: `codex/frontend-flow`
 - Optional integration branch: `codex/integration`
 - `main` remains the stable branch.
 - Neither agent pushes unfinished work directly to `main`.
 
 ## 📋 Team Progress Checklists
 
-### Agent 1 — Frontend Checklist
+### Agent 2 — Frontend Checklist
 
 - [x] Build the app shell and responsive navigation.
 - [x] Add the dark, high-contrast Horizon design system.
@@ -293,10 +293,10 @@ Initial shared types:
 - [x] Add accessible loading feedback for simulated scenario changes.
 - [x] Isolate UI data access behind a typed mock repository adapter.
 - [x] Make the local “Talk to a person” support action functional.
-- [ ] Integrate Agent 2's repository contract.
+- [ ] Integrate Agent 1's repository contract.
 - [ ] Verify the complete Active Astronaut flow.
 
-### Agent 2 — Backend Checklist
+### Agent 1 — Backend Checklist
 
 - [ ] Confirm access to the configured Supabase project.
 - [ ] Create migrations for `sample_people`, `health_observations`, and `demo_events`.
@@ -323,11 +323,11 @@ Initial shared types:
 ### Current Blockers
 
 - Supabase management access currently returns a permission error for the configured project.
-- The teammate must complete the Agent 2 backend work before the frontend can use live repository data.
+- Device Agent 1 must complete the backend work before Device Agent 2 can use live repository data.
 
 ### Next Coordination Point
 
-After Agent 2 publishes the shared types and repository contract, Agent 1 replaces the frontend mock data with the backend repository and both agents run the integration checklist.
+After Agent 1 publishes the shared types and repository contract, Agent 2 replaces the frontend mock data with the backend repository and both agents run the integration checklist.
 
 ## 📈 Delegated Progress Rules
 

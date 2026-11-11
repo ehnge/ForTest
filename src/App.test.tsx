@@ -101,6 +101,29 @@ describe("Horizon app shell", () => {
     expect(window.localStorage.getItem("horizon:wellbeing")).toContain("Felt steady after exercise.");
   });
 
+  it("verifies the active astronaut flow from alert to local check-in", async () => {
+    const user = userEvent.setup();
+    render(<App />);
+
+    expect(screen.getByRole("heading", { name: "How are you doing today?" })).toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: "Profile" }));
+    await user.selectOptions(screen.getByRole("combobox", { name: "Demo scenario" }), "recovery_concern");
+    await waitFor(() => expect(screen.queryByText("Loading simulated signals…")).not.toBeInTheDocument());
+
+    await user.click(screen.getAllByRole("button", { name: "Home" })[0]);
+    expect(screen.getByText("Watch")).toBeInTheDocument();
+    await user.click(screen.getAllByRole("button", { name: "Trends" })[0]);
+    await user.click(screen.getByRole("button", { name: "Show alert reason" }));
+    expect(screen.getByText(/Sleep was below your usual range on 4 of the last 5 days/)).toBeInTheDocument();
+
+    await user.click(screen.getAllByRole("button", { name: "Wellbeing" })[0]);
+    await user.selectOptions(screen.getByRole("combobox", { name: "Mood" }), "4");
+    await user.selectOptions(screen.getByRole("combobox", { name: "Stress" }), "2");
+    await user.selectOptions(screen.getByRole("combobox", { name: "Sleep quality" }), "Mixed");
+    await user.click(screen.getByRole("button", { name: "Save check-in locally" }));
+    expect(screen.getByText("Saved on this device")).toBeInTheDocument();
+  });
+
   it("opens local support options without sending a message", async () => {
     const user = userEvent.setup();
     render(<App />);

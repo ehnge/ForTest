@@ -15,7 +15,7 @@ export default function App() {
 
   const profile = profiles.find((candidate) => candidate.id === profileId) ?? profiles[0];
   const dashboard = useMemo(() => getScenarioData(scenario), [scenario]);
-  const dataUnavailable = scenario === "sensor_disconnected" || scenario === "offline";
+  const dataQuality = scenario === "sensor_disconnected" ? "disconnected" : scenario === "offline" ? "offline" : scenario === "stale" ? "stale" : "current";
 
   const setStageAndProfile = (nextStage: LifeStage) => {
     setStage(nextStage);
@@ -26,7 +26,7 @@ export default function App() {
   const content = (() => {
     switch (activeView) {
       case "trends":
-        return <TrendsView metrics={dashboard.metrics} dataUnavailable={dataUnavailable} />;
+        return <TrendsView metrics={dashboard.metrics} dataQuality={dataQuality} />;
       case "wellbeing":
         return <WellbeingView checkIn={checkIn} onCheckInChange={setCheckIn} privacy={privacy} onPrivacyChange={setPrivacy} />;
       case "guidance":
@@ -35,7 +35,7 @@ export default function App() {
         return <ProfileView profile={profile} profiles={profiles} stage={stage} scenario={scenario} onProfileChange={setProfileId} onScenarioChange={setScenario} onStageChange={setStageAndProfile} />;
       case "home":
       default:
-        return <HomeView profile={profile} stage={stage} scenario={scenario} metrics={dashboard.metrics} alert={dashboard.alert} dataUnavailable={dataUnavailable} onViewChange={setActiveView} />;
+        return <HomeView profile={profile} stage={stage} scenario={scenario} metrics={dashboard.metrics} alert={dashboard.alert} dataQuality={dataQuality} onViewChange={setActiveView} />;
     }
   })();
 

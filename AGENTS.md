@@ -18,6 +18,7 @@ Horizon is a research demo health companion for space travelers. It uses synthet
 - **Workflow definition:** The active-astronaut workflow and the three-stage product flow have been analyzed and converted into the phased roadmap below.
 - **Frontend shell:** Responsive navigation, stage selection, dark visual foundation, and the persistent disclaimer are wired into the app.
 - **Frontend mock flow:** Active Home, Trends, Wellbeing, Guidance, and Profile views are connected to typed mock data and LocalStorage state.
+- **Frontend data-quality states:** Stale, disconnected, and offline simulation scenarios have distinct Home/Trends messaging and next-step guidance.
 - **Frontend verification:** Browser smoke checks confirmed stage switching and Trends navigation; `npm test` and `npm run build` pass.
 
 ### 🟡 Active Focus
@@ -283,6 +284,7 @@ Initial shared types:
 - [x] Build Profile and simulation controls.
 - [x] Add Future and Retired preview states.
 - [x] Add initial accessibility and UI smoke tests.
+- [x] Add stale, disconnected, and offline frontend state messaging.
 - [ ] Integrate Agent 2's repository contract.
 - [ ] Verify the complete Active Astronaut flow.
 

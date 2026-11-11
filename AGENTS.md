@@ -33,7 +33,7 @@ Horizon is a research demo health companion for space travelers. It uses synthet
 - **Disconnected fallback verification:** The UI test suite verifies the “Data unavailable” label and reason when the simulated source disconnects.
 - **Privacy persistence verification:** The UI test suite verifies that a per-category wellbeing privacy toggle persists locally.
 - **Offline fallback verification:** The UI test suite verifies that offline Trends show a recovery path instead of stale charts.
-- **Frontend verification:** Browser smoke checks confirmed stage switching and Trends navigation; 16 tests, `npm run build`, and `git diff --check` pass after repository integration and alert-engine coverage.
+- **Frontend verification:** Browser smoke checks confirmed stage switching and Trends navigation; 20 tests, `npm run build`, and `git diff --check` pass after repository integration, NASA context, and Future/Retired coverage.
 - **Backend adapter wiring:** The usual-day app flow now loads profiles and observations through the typed `HorizonRepository`; explicit demo scenarios remain local fixtures, and Home shows the data source and fallback warning.
 - **Explainable alert engine:** `src/domain/alertEngine.ts` now evaluates personal 30-day baselines, single-reading and sustained-shift rules, emits plain-language reasons, and ignores exercise heart-rate readings; 16 tests pass.
 - **NASA radiation context:** `src/lib/nasaDonki.ts` fetches optional DONKI CME events with browser caching and a labeled mock fallback; Home displays a non-diagnostic Safe/Caution/High radiation context card.
@@ -144,7 +144,7 @@ Complete phases in order. Do not mark a phase complete until its verification ch
 - [x] Add LocalStorage persistence for check-ins, preferences, replay state, and seed.
 - [x] Add per-category privacy controls.
 - [x] Add unit tests for alert logic; backend synthetic-data tests are on Agent 1's branch.
-- [x] Add UI tests for stage switching, fallback states, and persistence.
+- [x] Add UI tests for stage switching, fallback states, persistence, and Future/Retired previews.
 - [ ] Test offline operation and refresh behavior.
 - [ ] Audit all copy for diagnosis, clinical certainty, and medical-device implications.
 - [ ] Run the production build and smoke-test the complete demo flow.

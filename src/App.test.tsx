@@ -173,4 +173,28 @@ describe("Horizon app shell", () => {
 
     expect(JSON.parse(window.localStorage.getItem("horizon:privacy") ?? "{}")).toMatchObject({ notes: true });
   });
+
+  it("saves future-traveler learning progress locally without certifying readiness", async () => {
+    const user = userEvent.setup();
+    render(<App />);
+
+    await user.selectOptions(screen.getByRole("combobox", { name: "Life stage" }), "future");
+    await user.click(screen.getAllByRole("button", { name: "Guidance" })[0]);
+    expect(screen.getByText(/never flight clearance or certification/)).toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: "Mark lesson complete" }));
+
+    expect(window.localStorage.getItem("horizon:trainee-lesson-complete")).toBe("true");
+    expect(screen.getByRole("button", { name: "Lesson saved locally" })).toBeInTheDocument();
+  });
+
+  it("persists retired summary field choices locally", async () => {
+    const user = userEvent.setup();
+    render(<App />);
+
+    await user.selectOptions(screen.getByRole("combobox", { name: "Life stage" }), "retired");
+    await user.click(screen.getAllByRole("button", { name: "Guidance" })[0]);
+    await user.click(screen.getByRole("checkbox", { name: "Private reflection" }));
+
+    expect(JSON.parse(window.localStorage.getItem("horizon:retired-summary-fields") ?? "{}")).toMatchObject({ reflection: true });
+  });
 });

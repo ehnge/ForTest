@@ -28,17 +28,18 @@ Horizon is a research demo health companion for space travelers. It uses synthet
 - **Simulation replay controls:** Profile persists a local seed and replay count, with an accessible replay action for the mock run.
 - **Simulation contract:** `DashboardRepository` accepts typed seed and replay controls so a backend adapter can reproduce the same UI contract.
 - **Backend contract import:** Agent 1's verified `src/domain/types.ts`, `src/data/repository.ts`, `src/data/synthetic.ts`, and `docs/backend-contract.md` are now present on the frontend branch for adapter integration.
+- **Backend-to-dashboard adapter:** `src/lib/backendDashboardRepository.ts` maps backend records into UI metrics/profiles and preserves repository source/warning metadata; alert decisions remain outside the adapter.
 - **Active-flow verification:** A cohesive UI test covers Active Home, recovery alert explanation, Trends, and a local wellbeing check-in.
 - **Disconnected fallback verification:** The UI test suite verifies the “Data unavailable” label and reason when the simulated source disconnects.
 - **Privacy persistence verification:** The UI test suite verifies that a per-category wellbeing privacy toggle persists locally.
 - **Offline fallback verification:** The UI test suite verifies that offline Trends show a recovery path instead of stale charts.
-- **Frontend verification:** Browser smoke checks confirmed stage switching and Trends navigation; twelve UI tests, `npm run build`, and `git diff --check` pass after importing the backend contract.
+- **Frontend verification:** Browser smoke checks confirmed stage switching and Trends navigation; 13 UI/adapter tests, `npm run build`, and `git diff --check` pass after importing the backend contract.
 
 ### 🟡 Active Focus
 
 > **AGENT NOTE:** The user explicitly authorized frontend work with typed mock data while the backend contract is pending. Do not connect live Supabase data until Agent 1 publishes the shared repository contract.
 
-- **Immediate task:** Build the UI mapping adapter around Agent 1's `HorizonRepository`, preserving source/warning metadata and the existing mock scenario states at the UI boundary.
+- **Immediate task:** Wire the async backend adapter into `App`, using the mock adapter for explicit demo scenarios and preserving loading/source/warning states at the UI boundary.
 - **Required tables:** `sample_people`, `health_observations`, and `demo_events`.
 - **Required seed:** Four synthetic travelers with 180 days of observations.
 - **Security requirement:** Enable RLS on every exposed table and allow only the intended synthetic-data reads.
@@ -307,6 +308,7 @@ Initial shared types:
 - [x] Add LocalStorage-backed simulation seed and replay controls.
 - [x] Pass typed seed and replay controls through the frontend repository boundary.
 - [x] Import Agent 1's verified shared domain and repository contract files.
+- [x] Add the typed backend-to-dashboard mapping adapter and source/warning preservation.
 - [x] Verify the complete mock Active Astronaut flow from alert to local check-in.
 - [x] Verify the disconnected-source fallback and “Data unavailable” copy.
 - [x] Verify wellbeing privacy choices persist in LocalStorage.

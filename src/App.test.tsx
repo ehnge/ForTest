@@ -148,4 +148,16 @@ describe("Horizon app shell", () => {
     expect(screen.getByText("Crew medic")).toBeInTheDocument();
     expect(screen.getByText(/This demo does not send messages/)).toBeInTheDocument();
   });
+
+  it("persists wellbeing privacy choices locally", async () => {
+    const user = userEvent.setup();
+    render(<App />);
+
+    await user.click(screen.getAllByRole("button", { name: "Wellbeing" })[0]);
+    const notesToggle = screen.getByRole("checkbox", { name: "Free-text notes" });
+    expect(notesToggle).not.toBeChecked();
+    await user.click(notesToggle);
+
+    expect(JSON.parse(window.localStorage.getItem("horizon:privacy") ?? "{}")).toMatchObject({ notes: true });
+  });
 });

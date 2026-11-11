@@ -29,7 +29,8 @@ Horizon is a research demo health companion for space travelers. It uses synthet
 - **Simulation contract:** `DashboardRepository` accepts typed seed and replay controls so a backend adapter can reproduce the same UI contract.
 - **Active-flow verification:** A cohesive UI test covers Active Home, recovery alert explanation, Trends, and a local wellbeing check-in.
 - **Disconnected fallback verification:** The UI test suite verifies the “Data unavailable” label and reason when the simulated source disconnects.
-- **Frontend verification:** Browser smoke checks confirmed stage switching and Trends navigation; ten UI tests, `npm run build`, and `git diff --check` pass.
+- **Privacy persistence verification:** The UI test suite verifies that a per-category wellbeing privacy toggle persists locally.
+- **Frontend verification:** Browser smoke checks confirmed stage switching and Trends navigation; eleven UI tests, `npm run build`, and `git diff --check` pass.
 
 ### 🟡 Active Focus
 
@@ -305,6 +306,7 @@ Initial shared types:
 - [x] Pass typed seed and replay controls through the frontend repository boundary.
 - [x] Verify the complete mock Active Astronaut flow from alert to local check-in.
 - [x] Verify the disconnected-source fallback and “Data unavailable” copy.
+- [x] Verify wellbeing privacy choices persist in LocalStorage.
 - [ ] Integrate Agent 1's repository contract.
 
 ### Agent 1 — Backend Checklist

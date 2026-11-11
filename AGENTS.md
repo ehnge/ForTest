@@ -10,7 +10,7 @@ Horizon is a research demo health companion for space travelers. It uses synthet
 - **Supabase dependency:** `@supabase/supabase-js` is installed.
 - **Supabase client:** Browser client exists in `src/lib/supabase.ts`.
 - **Environment setup:** `.env.example` is committed and `.env.local` is ignored.
-- **Supabase boundary:** `src/lib/supabase.ts` keeps the browser client available; the app currently uses the typed mock repository until the backend contract is published.
+- **Supabase boundary:** `src/lib/supabase.ts` keeps the browser client available; UI components use repository adapters and retain a deterministic local fallback when cloud configuration is unavailable.
 - **Safety disclaimer:** The placeholder page displays: `Simulated data. Not medical advice. Not diagnostic.`
 - **Build verification:** `npm run build` passes.
 - **Git:** Initial local commit exists and `origin` points to the HEXARA GitHub repository.
@@ -21,7 +21,7 @@ Horizon is a research demo health companion for space travelers. It uses synthet
 - **Frontend data-quality states:** Stale, disconnected, and offline simulation scenarios have distinct Home/Trends messaging and next-step guidance.
 - **Stage-aware previews:** Home copy now changes for Future, Active, and Retired stages while the Active flow remains primary.
 - **Frontend loading boundary:** Scenario changes show an accessible loading state before the selected simulated signals render.
-- **Frontend repository boundary:** UI state reads typed profiles and snapshots through `DashboardRepository`; the current adapter is mock-only and replaceable.
+- **Frontend repository boundary:** UI state reads typed profiles and snapshots through repository adapters; components do not query Supabase directly.
 - **Wellbeing support action:** The “Talk to a person” panel opens local crew, mission-support, and family-contact options without sending data.
 - **Accessible stage shell:** Workspace labels follow the selected stage, and mobile navigation exposes the active page through `aria-current`.
 - **Trend alert explanations:** Trends exposes an expandable plain-language reason for the active mock alert.
@@ -33,7 +33,7 @@ Horizon is a research demo health companion for space travelers. It uses synthet
 - **Disconnected fallback verification:** The UI test suite verifies the “Data unavailable” label and reason when the simulated source disconnects.
 - **Privacy persistence verification:** The UI test suite verifies that a per-category wellbeing privacy toggle persists locally.
 - **Offline fallback verification:** The UI test suite verifies that offline Trends show a recovery path instead of stale charts.
-- **Frontend verification:** Browser smoke checks confirmed stage switching and Trends navigation; 13 UI/adapter tests, `npm run build`, and `git diff --check` pass after importing the backend contract.
+- **Frontend verification:** Browser smoke checks confirmed stage switching and Trends navigation; 16 tests, `npm run build`, and `git diff --check` pass after repository integration and alert-engine coverage.
 - **Backend adapter wiring:** The usual-day app flow now loads profiles and observations through the typed `HorizonRepository`; explicit demo scenarios remain local fixtures, and Home shows the data source and fallback warning.
 - **Explainable alert engine:** `src/domain/alertEngine.ts` now evaluates personal 30-day baselines, single-reading and sustained-shift rules, emits plain-language reasons, and ignores exercise heart-rate readings; 16 tests pass.
 
@@ -41,11 +41,11 @@ Horizon is a research demo health companion for space travelers. It uses synthet
 
 > **AGENT NOTE:** The user explicitly authorized frontend work with typed mock data while the backend contract is pending. Do not connect live Supabase data until Agent 1 publishes the shared repository contract.
 
-- **Immediate task:** Coordinate the alert-engine contract with Agent 1, then add verified replay/data-quality scenarios and live Supabase smoke coverage.
+- **Immediate task:** Complete branch integration with Agent 1: agree on alert fields, verify cloud reads with project environment variables, and run the shared integration checklist before merging to `main`.
 - **Required tables:** `sample_people`, `health_observations`, and `demo_events`.
 - **Required seed:** Four synthetic travelers with 180 days of observations.
 - **Security requirement:** Enable RLS on every exposed table and allow only the intended synthetic-data reads.
-- **Current blocker:** The alert engine is implemented on the frontend branch pending Agent 1 review; backend replay/data-quality scenarios and NASA DONKI integration remain pending.
+- **Current blocker:** The frontend branch has the alert engine and adapter, but Agent 1's backend replay/data-quality contract and NASA DONKI integration are still pending; cloud smoke coverage also requires a configured `.env.local`.
 
 ## 🧭 Implementation Roadmap
 
@@ -72,7 +72,7 @@ Complete phases in order. Do not mark a phase complete until its verification ch
 - [x] Seed four traveler profiles.
 - [x] Generate 180 days of deterministic observations per traveler.
 - [x] Add the 3-day radiation spike, 5-day illness-like episode, and 5-day sleep disruption.
-- [ ] Add seed control and replay-event behavior.
+- [x] Add seed control and replay-event behavior in the frontend simulation controls; backend replay contract remains pending.
 - [x] Verify row counts, metric units, dates, and RLS behavior.
 
 **Exit check:** The browser can load synthetic profiles and observations from Supabase, and the app has a deterministic local fallback.
@@ -80,13 +80,13 @@ Complete phases in order. Do not mark a phase complete until its verification ch
 ### Phase 2 — Monitoring engine and data quality
 
 - [x] Add typed domain types and a Supabase repository layer.
-- [ ] Implement the rolling 30-day personal baseline.
-- [ ] Implement the `>3 SD` single-reading alert rule.
-- [ ] Implement the `>2 SD on 3 of the last 5 days` sustained-shift rule.
-- [ ] Include a plain-language reason with every alert.
-- [ ] Add usual, recovery-concern, and sensor-disconnected scenarios.
-- [ ] Add insufficient-baseline, stale-data, missing-data, and offline states.
-- [ ] Ensure exercise-related heart-rate changes do not trigger recovery alerts by themselves.
+- [x] Implement the rolling 30-day personal baseline in the frontend domain adapter.
+- [x] Implement the `>3 SD` single-reading alert rule with tests.
+- [x] Implement the `>2 SD on 3 of the last 5 days` sustained-shift rule with tests.
+- [x] Include a plain-language reason with every generated alert.
+- [x] Add usual, recovery-concern, and sensor-disconnected scenarios in the frontend flow.
+- [x] Add stale-data and offline UI states; backend insufficient-baseline and missing-data contracts remain pending.
+- [x] Ensure exercise-related heart-rate changes do not trigger recovery alerts by themselves.
 
 **Exit check:** Alert decisions are deterministic, explainable, unit-tested, and independent from the UI.
 
@@ -135,11 +135,11 @@ Complete phases in order. Do not mark a phase complete until its verification ch
 
 ### Phase 7 — Quality, privacy, and presentation
 
-- [ ] Add responsive dark space-themed styling.
-- [ ] Add LocalStorage persistence for check-ins, preferences, replay state, and seed.
-- [ ] Add per-category privacy controls.
-- [ ] Add unit tests for alert logic and synthetic-data generation.
-- [ ] Add UI tests for stage switching, fallback states, and persistence.
+- [x] Add responsive dark space-themed styling.
+- [x] Add LocalStorage persistence for check-ins, preferences, replay state, and seed.
+- [x] Add per-category privacy controls.
+- [x] Add unit tests for alert logic; backend synthetic-data tests are on Agent 1's branch.
+- [x] Add UI tests for stage switching, fallback states, and persistence.
 - [ ] Test offline operation and refresh behavior.
 - [ ] Audit all copy for diagnosis, clinical certainty, and medical-device implications.
 - [ ] Run the production build and smoke-test the complete demo flow.
@@ -332,23 +332,23 @@ Initial shared types:
 
 ### Shared Integration Checklist
 
-- [ ] Agree on the shared TypeScript types.
-- [ ] Confirm repository function names and return shapes.
-- [ ] Confirm alert severity and explanation fields.
-- [ ] Merge backend contract into the frontend branch.
-- [ ] Replace frontend mocks with repository calls.
-- [ ] Run build, unit tests, RLS checks, and active-flow smoke test.
-- [ ] Review synthetic-data labels and safety copy.
+- [x] Agree on the shared TypeScript types.
+- [x] Confirm repository function names and return shapes.
+- [x] Confirm alert severity and explanation fields for the current frontend adapter.
+- [x] Import the verified backend contract into the frontend branch.
+- [x] Replace the usual-day frontend mock with repository calls and retain local fallback.
+- [ ] Run the combined build, unit tests, RLS checks, and active-flow smoke test after branch integration.
+- [x] Review synthetic-data labels and safety copy for the frontend flow.
 - [ ] Merge the verified integration pull request into `main`.
 
 ### Current Blockers
 
-- Agent 1's rolling baseline, explainable alert engine, replay, and data-quality modules are not yet published; the frontend preserves mock alert/scenario behavior until those contracts are available.
-- Live adapter integration still needs a verified `.env.local` at runtime to exercise cloud reads; deterministic local fallback remains available without it.
+- Agent 1's backend replay/data-quality modules and NASA DONKI integration are not yet published; the frontend preserves local scenario fixtures until those contracts are available.
+- Live cloud smoke testing still needs a verified `.env.local` at runtime; deterministic local fallback is verified without it.
 
 ### Next Coordination Point
 
-Agent 2 has imported Agent 1's contract files. Next, Agent 2 maps repository results into the UI adapter; after Agent 1 publishes baseline and alert types, both agents review the final alert mapping and run the integration checklist.
+Both agents now have a repository contract and the frontend branch has an adapter plus alert mapping. Next coordination point: Agent 1 reviews the alert fields, publishes replay/data-quality behavior, and the team runs the combined integration checklist before merging into `main`.
 
 ## 📈 Delegated Progress Rules
 

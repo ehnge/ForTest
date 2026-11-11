@@ -60,6 +60,19 @@ describe("Horizon app shell", () => {
     expect(screen.getByText(/charts remain visible for context/)).toBeInTheDocument();
   });
 
+  it("shows a clear unavailable state when the simulated source disconnects", async () => {
+    const user = userEvent.setup();
+    render(<App />);
+
+    await user.click(screen.getByRole("button", { name: "Profile" }));
+    await user.selectOptions(screen.getByRole("combobox", { name: "Demo scenario" }), "sensor_disconnected");
+    await waitFor(() => expect(screen.queryByText("Loading simulated signals…")).not.toBeInTheDocument());
+    await user.click(screen.getAllByRole("button", { name: "Home" })[0]);
+
+    expect(screen.getByText("Data unavailable")).toBeInTheDocument();
+    expect(screen.getByText(/simulated sensor has stopped sending readings/)).toBeInTheDocument();
+  });
+
   it("opens the plain-language reason for a trend alert", async () => {
     const user = userEvent.setup();
     render(<App />);

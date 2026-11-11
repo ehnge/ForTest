@@ -27,21 +27,22 @@ Horizon is a research demo health companion for space travelers. It uses synthet
 - **Trend alert explanations:** Trends exposes an expandable plain-language reason for the active mock alert.
 - **Simulation replay controls:** Profile persists a local seed and replay count, with an accessible replay action for the mock run.
 - **Simulation contract:** `DashboardRepository` accepts typed seed and replay controls so a backend adapter can reproduce the same UI contract.
+- **Backend contract import:** Agent 1's verified `src/domain/types.ts`, `src/data/repository.ts`, `src/data/synthetic.ts`, and `docs/backend-contract.md` are now present on the frontend branch for adapter integration.
 - **Active-flow verification:** A cohesive UI test covers Active Home, recovery alert explanation, Trends, and a local wellbeing check-in.
 - **Disconnected fallback verification:** The UI test suite verifies the “Data unavailable” label and reason when the simulated source disconnects.
 - **Privacy persistence verification:** The UI test suite verifies that a per-category wellbeing privacy toggle persists locally.
 - **Offline fallback verification:** The UI test suite verifies that offline Trends show a recovery path instead of stale charts.
-- **Frontend verification:** Browser smoke checks confirmed stage switching and Trends navigation; twelve UI tests, `npm run build`, and `git diff --check` pass.
+- **Frontend verification:** Browser smoke checks confirmed stage switching and Trends navigation; twelve UI tests, `npm run build`, and `git diff --check` pass after importing the backend contract.
 
 ### 🟡 Active Focus
 
 > **AGENT NOTE:** The user explicitly authorized frontend work with typed mock data while the backend contract is pending. Do not connect live Supabase data until Agent 1 publishes the shared repository contract.
 
-- **Immediate task:** Align `DashboardRepository` with Agent 1's published contract, then replace the mock adapter while keeping loading and data-quality states at the UI boundary.
+- **Immediate task:** Build the UI mapping adapter around Agent 1's `HorizonRepository`, preserving source/warning metadata and the existing mock scenario states at the UI boundary.
 - **Required tables:** `sample_people`, `health_observations`, and `demo_events`.
 - **Required seed:** Four synthetic travelers with 180 days of observations.
 - **Security requirement:** Enable RLS on every exposed table and allow only the intended synthetic-data reads.
-- **Current blocker:** Device Agent 1's branch currently contains only an access-inspection note: `.env.local`, Supabase environment variables, management credentials, CLI, and MCP access are unavailable, so no backend contract exists to integrate.
+- **Current blocker:** Agent 1's baseline/alert engine and backend replay/data-quality scenarios are still pending; until those are published, frontend alert explanations and demo scenario controls remain local mock behavior.
 
 ## 🧭 Implementation Roadmap
 
@@ -61,21 +62,21 @@ Complete phases in order. Do not mark a phase complete until its verification ch
 
 ### Phase 1 — Synthetic data and Supabase foundation
 
-- [ ] Confirm access to the configured Supabase project.
-- [ ] Create migrations for `sample_people`, `health_observations`, and `demo_events`.
-- [ ] Enable RLS on every exposed table.
-- [ ] Add read-only policies for public synthetic demo data.
-- [ ] Seed four traveler profiles.
-- [ ] Generate 180 days of deterministic observations per traveler.
-- [ ] Add the 3-day radiation spike, 5-day illness-like episode, and 5-day sleep disruption.
+- [x] Confirm access to the configured Supabase project.
+- [x] Create migrations for `sample_people`, `health_observations`, and `demo_events`.
+- [x] Enable RLS on every exposed table.
+- [x] Add read-only policies for public synthetic demo data.
+- [x] Seed four traveler profiles.
+- [x] Generate 180 days of deterministic observations per traveler.
+- [x] Add the 3-day radiation spike, 5-day illness-like episode, and 5-day sleep disruption.
 - [ ] Add seed control and replay-event behavior.
-- [ ] Verify row counts, metric units, dates, and RLS behavior.
+- [x] Verify row counts, metric units, dates, and RLS behavior.
 
 **Exit check:** The browser can load synthetic profiles and observations from Supabase, and the app has a deterministic local fallback.
 
 ### Phase 2 — Monitoring engine and data quality
 
-- [ ] Add typed domain types and a Supabase repository layer.
+- [x] Add typed domain types and a Supabase repository layer.
 - [ ] Implement the rolling 30-day personal baseline.
 - [ ] Implement the `>3 SD` single-reading alert rule.
 - [ ] Implement the `>2 SD on 3 of the last 5 days` sustained-shift rule.
@@ -305,6 +306,7 @@ Initial shared types:
 - [x] Add an expandable plain-language explanation for trend alert markers.
 - [x] Add LocalStorage-backed simulation seed and replay controls.
 - [x] Pass typed seed and replay controls through the frontend repository boundary.
+- [x] Import Agent 1's verified shared domain and repository contract files.
 - [x] Verify the complete mock Active Astronaut flow from alert to local check-in.
 - [x] Verify the disconnected-source fallback and “Data unavailable” copy.
 - [x] Verify wellbeing privacy choices persist in LocalStorage.
@@ -313,16 +315,16 @@ Initial shared types:
 
 ### Agent 1 — Backend Checklist
 
-- [ ] Confirm access to the configured Supabase project.
-- [ ] Create migrations for `sample_people`, `health_observations`, and `demo_events`.
-- [ ] Enable RLS and verify read-only synthetic-data policies.
-- [ ] Seed four profiles and 180 days of observations.
-- [ ] Add the radiation, illness-like, and sleep-disruption events.
-- [ ] Add typed domain models and repository functions.
+- [x] Confirm access to the configured Supabase project.
+- [x] Create migrations for `sample_people`, `health_observations`, and `demo_events`.
+- [x] Enable RLS and verify read-only synthetic-data policies.
+- [x] Seed four profiles and 180 days of observations.
+- [x] Add the radiation, illness-like, and sleep-disruption events.
+- [x] Add typed domain models and repository functions.
 - [ ] Implement baseline and explainable alert rules.
 - [ ] Add simulation scenarios and deterministic replay.
 - [ ] Add NASA DONKI caching and mock fallback.
-- [ ] Add backend/data tests and integration documentation.
+- [x] Add backend/data tests and integration documentation.
 
 ### Shared Integration Checklist
 
@@ -337,12 +339,12 @@ Initial shared types:
 
 ### Current Blockers
 
-- Device Agent 1's access inspection (2026-11-11) found no `.env.local`, `VITE_SUPABASE_URL`, `VITE_SUPABASE_PUBLISHABLE_KEY`, `SUPABASE_ACCESS_TOKEN`, or `DATABASE_URL`, and no installed Supabase CLI, `psql`, Docker, or Supabase MCP access.
-- Device Agent 1 must publish migrations, shared types, and repository functions before Device Agent 2 can use live repository data; `origin/codex/backend-data` currently contains documentation only.
+- Agent 1's rolling baseline, explainable alert engine, replay, and data-quality modules are not yet published; the frontend preserves mock alert/scenario behavior until those contracts are available.
+- Live adapter integration still needs a verified `.env.local` at runtime to exercise cloud reads; deterministic local fallback remains available without it.
 
 ### Next Coordination Point
 
-After Agent 1 publishes the shared types and repository contract, Agent 2 replaces the frontend mock data with the backend repository and both agents run the integration checklist.
+Agent 2 has imported Agent 1's contract files. Next, Agent 2 maps repository results into the UI adapter; after Agent 1 publishes baseline and alert types, both agents review the final alert mapping and run the integration checklist.
 
 ## 📈 Delegated Progress Rules
 

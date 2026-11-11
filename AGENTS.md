@@ -19,6 +19,7 @@ Horizon is a research demo health companion for space travelers. It uses synthet
 - **Frontend shell:** Responsive navigation, stage selection, dark visual foundation, and the persistent disclaimer are wired into the app.
 - **Frontend mock flow:** Active Home, Trends, Wellbeing, Guidance, and Profile views are connected to typed mock data and LocalStorage state.
 - **Frontend data-quality states:** Stale, disconnected, and offline simulation scenarios have distinct Home/Trends messaging and next-step guidance.
+- **Stage-aware previews:** Home copy now changes for Future, Active, and Retired stages while the Active flow remains primary.
 - **Frontend verification:** Browser smoke checks confirmed stage switching and Trends navigation; five UI tests and `npm run build` pass.
 
 ### 🟡 Active Focus

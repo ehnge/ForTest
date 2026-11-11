@@ -3,6 +3,7 @@ import { AlertTriangle, ArrowRight, Check, CircleHelp, LockKeyhole, MessageCircl
 import { MetricTile } from "./MetricTile";
 import { StatusChip } from "./StatusChip";
 import { TrendChart } from "./TrendChart";
+import type { DashboardSource } from "../lib/backendDashboardRepository";
 import type { Alert, DataQualityState, LifeStage, MetricCardData, SimulationScenario, TravelerProfile } from "../types/horizon";
 import type { ViewName } from "./AppShell";
 
@@ -10,7 +11,7 @@ type CheckIn = { mood: string; stress: string; sleepQuality: string; note: strin
 type Privacy = { mood: boolean; notes: boolean; trends: boolean };
 const panelClass = "rounded-3xl border border-slate-700/70 bg-slate-900/70 p-5 shadow-xl shadow-black/10 sm:p-6";
 
-export function HomeView({ profile, stage, scenario, metrics, alert, dataQuality, loading, onViewChange }: { profile: TravelerProfile; stage: LifeStage; scenario: SimulationScenario; metrics: MetricCardData[]; alert: Alert | null; dataQuality: DataQualityState; loading: boolean; onViewChange: (view: ViewName) => void }) {
+export function HomeView({ profile, stage, scenario, metrics, alert, dataQuality, loading, source, warning, onViewChange }: { profile: TravelerProfile; stage: LifeStage; scenario: SimulationScenario; metrics: MetricCardData[]; alert: Alert | null; dataQuality: DataQualityState; loading: boolean; source?: DashboardSource; warning?: string; onViewChange: (view: ViewName) => void }) {
   const dataUnavailable = dataQuality === "disconnected" || dataQuality === "offline";
   const stale = dataQuality === "stale";
   const status = dataUnavailable ? "unavailable" : stale ? "watch" : alert?.severity ?? "normal";
@@ -20,6 +21,7 @@ export function HomeView({ profile, stage, scenario, metrics, alert, dataQuality
 
   return <div className="space-y-7">
     <header className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end"><div><p className="text-sm font-medium uppercase tracking-[0.2em] text-cyan-200">{stageContent.eyebrow}</p><h1 className="mt-2 text-3xl font-semibold tracking-tight text-white sm:text-4xl">{stageContent.title}</h1><p className="mt-2 max-w-2xl text-slate-400">{profile.name} · {stageLabel(stage)} · Mission day {profile.missionDay}. {stageContent.description}</p></div><span className="inline-flex items-center gap-2 self-start rounded-full border border-slate-700 bg-slate-900/70 px-3 py-2 text-sm text-slate-300"><Radio size={16} className="text-cyan-200" /> {scenarioLabel(scenario)}</span></header>
+    <DataSourceStatus source={source} warning={warning} />
     {loading ? <LoadingPanel /> : <>
     <section className={`${panelClass} ${dataUnavailable ? "border-slate-500/70" : stale || alert ? "border-amber-300/40" : "border-emerald-300/30"}`} aria-labelledby="status-title"><div className="flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between"><div><p className="text-sm font-medium text-slate-400">Today’s status</p><div className="mt-3 flex items-center gap-3"><StatusChip severity={status} /><h2 id="status-title" className="text-xl font-semibold text-white">{dataUnavailable ? "Waiting for a data source" : stale ? "The data needs a review" : alert ? "A pattern is worth reviewing" : "Your signals look usual"}</h2></div><p className="mt-4 max-w-2xl text-base leading-7 text-slate-300">{statusReason}</p></div><div className="rounded-2xl bg-slate-950/50 px-4 py-3 text-sm text-slate-400">Last update<br /><span className="font-semibold text-slate-200">{stale ? "Earlier today · simulated" : "Just now · simulated"}</span></div></div><div className="mt-6 flex flex-col gap-3 border-t border-slate-800 pt-5 sm:flex-row sm:items-center"><span className="text-sm font-medium text-slate-300">Suggested next step</span><button type="button" onClick={() => onViewChange(dataUnavailable || stale ? "profile" : "wellbeing")} className="inline-flex items-center justify-center gap-2 rounded-xl bg-cyan-300 px-4 py-3 text-sm font-bold text-slate-950 transition hover:bg-cyan-200">{action}<ArrowRight size={17} /></button><button type="button" onClick={() => onViewChange("trends")} className="rounded-xl px-4 py-3 text-sm font-semibold text-slate-300 hover:bg-slate-800">Review trends</button></div></section>
     <section aria-labelledby="signals-title"><div className="mb-3 flex items-end justify-between gap-3"><div><p className="text-sm text-slate-400">Personal signals</p><h2 id="signals-title" className="text-xl font-semibold text-white">What changed?</h2></div><button type="button" onClick={() => onViewChange("trends")} className="text-sm font-semibold text-cyan-200 hover:text-cyan-100">See all trends</button></div><div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">{metrics.slice(0, 6).map((metric) => <MetricTile key={metric.metric} metric={metric} />)}</div></section>
@@ -28,7 +30,7 @@ export function HomeView({ profile, stage, scenario, metrics, alert, dataQuality
   </div>;
 }
 
-export function TrendsView({ metrics, alert, dataQuality, loading }: { metrics: MetricCardData[]; alert: Alert | null; dataQuality: DataQualityState; loading: boolean }) {
+export function TrendsView({ metrics, alert, dataQuality, loading, source, warning }: { metrics: MetricCardData[]; alert: Alert | null; dataQuality: DataQualityState; loading: boolean; source?: DashboardSource; warning?: string }) {
   const dataUnavailable = dataQuality === "disconnected" || dataQuality === "offline";
   const stale = dataQuality === "stale";
   const [alertOpen, setAlertOpen] = useState(false);
@@ -55,6 +57,7 @@ function FieldLabel({ label, hint, children }: { label: string; hint?: string; c
 function PrivacyToggle({ label, checked, onChange }: { label: string; checked: boolean; onChange: () => void }) { return <label className="flex cursor-pointer items-center justify-between gap-4 rounded-xl border border-slate-800 bg-slate-950/30 px-3 py-3 text-sm text-slate-300"><span>{label}</span><input type="checkbox" checked={checked} onChange={onChange} className="size-4 accent-cyan-300" /></label>; }
 function ScenarioRow({ icon, title, body }: { icon: ReactNode; title: string; body: string }) { return <div className="flex items-start gap-3 rounded-xl border border-slate-800 bg-slate-950/30 p-3"><span className="text-cyan-200">{icon}</span><div><p className="text-sm font-semibold text-slate-200">{title}</p><p className="mt-1 text-xs leading-5 text-slate-500">{body}</p></div></div>; }
 function DataNotice({ title, body }: { title: string; body: string }) { return <section className={`${panelClass} flex max-w-2xl items-start gap-3`} role="status"><WifiOff className="mt-1 shrink-0 text-slate-300" /><div><h2 className="font-semibold text-white">{title}</h2><p className="mt-2 text-sm leading-6 text-slate-400">{body}</p></div></section>; }
+function DataSourceStatus({ source, warning }: { source?: DashboardSource; warning?: string }) { if (!source) return null; return <div className="rounded-2xl border border-slate-700/70 bg-slate-900/50 px-4 py-3 text-sm text-slate-300" role="status"><span className="font-semibold text-slate-100">Source:</span> {source === "supabase" ? "Supabase synthetic data" : "Local synthetic fallback"}{warning ? <span className="ml-2 text-slate-400">{warning}</span> : null}</div>; }
 function LoadingPanel() { return <section className={`${panelClass} flex max-w-2xl items-start gap-3`} role="status" aria-live="polite"><span className="mt-1 size-4 animate-pulse rounded-full bg-cyan-300" aria-hidden="true" /><div><h2 className="font-semibold text-white">Loading simulated signals…</h2><p className="mt-2 text-sm leading-6 text-slate-400">Preparing the selected scenario and personal comparison.</p></div></section>; }
 function stageLabel(stage: LifeStage) { return stage === "future" ? "Future traveler" : stage === "retired" ? "Retired astronaut" : "Active astronaut"; }
 function scenarioLabel(scenario: SimulationScenario) { return scenario === "usual" ? "Usual day" : scenario === "recovery_concern" ? "Recovery concern" : scenario === "sensor_disconnected" ? "Sensor disconnected" : scenario === "stale" ? "Stale data" : "Offline mode"; }

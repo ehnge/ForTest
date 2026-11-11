@@ -34,12 +34,13 @@ Horizon is a research demo health companion for space travelers. It uses synthet
 - **Privacy persistence verification:** The UI test suite verifies that a per-category wellbeing privacy toggle persists locally.
 - **Offline fallback verification:** The UI test suite verifies that offline Trends show a recovery path instead of stale charts.
 - **Frontend verification:** Browser smoke checks confirmed stage switching and Trends navigation; 13 UI/adapter tests, `npm run build`, and `git diff --check` pass after importing the backend contract.
+- **Backend adapter wiring:** The usual-day app flow now loads profiles and observations through the typed `HorizonRepository`; explicit demo scenarios remain local fixtures, and Home shows the data source and fallback warning.
 
 ### 🟡 Active Focus
 
 > **AGENT NOTE:** The user explicitly authorized frontend work with typed mock data while the backend contract is pending. Do not connect live Supabase data until Agent 1 publishes the shared repository contract.
 
-- **Immediate task:** Wire the async backend adapter into `App`, using the mock adapter for explicit demo scenarios and preserving loading/source/warning states at the UI boundary.
+- **Immediate task:** Replace the adapter's display-only baseline and null alert with Agent 1's verified personal-baseline and explainable-alert contract when published.
 - **Required tables:** `sample_people`, `health_observations`, and `demo_events`.
 - **Required seed:** Four synthetic travelers with 180 days of observations.
 - **Security requirement:** Enable RLS on every exposed table and allow only the intended synthetic-data reads.
@@ -313,7 +314,7 @@ Initial shared types:
 - [x] Verify the disconnected-source fallback and “Data unavailable” copy.
 - [x] Verify wellbeing privacy choices persist in LocalStorage.
 - [x] Verify offline Trends fallback and recovery guidance.
-- [ ] Integrate Agent 1's repository contract.
+- [x] Integrate Agent 1's repository contract for the usual-day flow, with deterministic local fallback.
 
 ### Agent 1 — Backend Checklist
 

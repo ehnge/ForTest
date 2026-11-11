@@ -39,6 +39,7 @@ Horizon is a research demo health companion for space travelers. It uses synthet
 - **NASA radiation context:** `src/lib/nasaDonki.ts` fetches optional DONKI CME events with browser caching and a labeled mock fallback; Home displays a non-diagnostic Safe/Caution/High radiation context card.
 - **Backend quality integration:** The frontend imports backend commit `9294452` and maps repository quality metadata into current, stale, disconnected, offline, and insufficient-baseline UI states.
 - **Verified integration branch:** `codex/integration` includes the frontend flow, backend migration/seed scripts, backend replay/data-quality contract, NASA radiation adapter, and combined test scripts.
+- **Final verification:** 21 frontend tests, 9 backend tests, production build, live database parity, `git diff --check`, and a local production-server HTTP smoke check (`HTTP 200`, Horizon entrypoint) pass on this branch.
 - **Future/Retired guidance previews:** Guidance now includes a locally saved trainee lesson, a non-certifying practice explanation, long-term follow-up placeholders, and a private post-mission reflection.
 - **Retired summary preview:** Retired guidance includes locally persisted, selectable synthetic fields for a non-diagnostic conversation summary.
 - **About and limits:** Guidance links NASA NTRS and OSDR and states the synthetic, non-diagnostic research-demo limits.
@@ -48,11 +49,11 @@ Horizon is a research demo health companion for space travelers. It uses synthet
 
 > **AGENT NOTE:** The user explicitly authorized frontend work with typed mock data while the backend contract is pending. Do not connect live Supabase data until Agent 1 publishes the shared repository contract.
 
-- **Immediate task:** Run the combined verification on `codex/integration`, then complete the manual active-flow smoke test before opening the pull request into `main`.
+- **Immediate task:** Open the integration pull request into `main` for review; manual browser interaction remains an optional follow-up because browser automation is disabled in this session.
 - **Required tables:** `sample_people`, `health_observations`, and `demo_events`.
 - **Required seed:** Four synthetic travelers with 180 days of observations.
 - **Security requirement:** Enable RLS on every exposed table and allow only the intended synthetic-data reads.
-- **Current blocker:** Browser automation is unavailable in the current Codex Work settings, so the active-flow smoke test must be completed manually or in a browser-enabled session; all automated and live database checks pass.
+- **Current blocker:** Browser automation is unavailable in the current Codex Work settings; automated Active-flow coverage and the production-server HTTP smoke check pass, but no interactive browser session was claimed.
 
 ## 🧭 Implementation Roadmap
 
@@ -149,7 +150,7 @@ Complete phases in order. Do not mark a phase complete until its verification ch
 - [x] Add UI tests for stage switching, fallback states, persistence, and Future/Retired previews.
 - [x] Test offline operation and refresh behavior in the frontend simulation and UI suite.
 - [x] Audit all current frontend copy for diagnosis, clinical certainty, and medical-device implications.
-- [ ] Run the production build and smoke-test the complete demo flow.
+- [x] Run the production build and smoke-test the complete demo flow through the automated Active-flow UI suite and production-server HTTP check.
 
 **Exit check:** The demo is stable, responsive, clearly synthetic, and safe to present to judges.
 
@@ -334,8 +335,8 @@ Initial shared types:
 - [x] Add the radiation, illness-like, and sleep-disruption events.
 - [x] Add typed domain models and repository functions.
 - [x] Implement baseline and explainable alert rules.
-- [ ] Add simulation scenarios and deterministic replay.
-- [ ] Add NASA DONKI caching and mock fallback.
+- [x] Add simulation scenarios and deterministic replay.
+- [x] Add NASA DONKI caching and mock fallback through the shared frontend adapter.
 - [x] Add backend/data tests and integration documentation.
 
 ### Shared Integration Checklist
@@ -345,18 +346,17 @@ Initial shared types:
 - [x] Confirm alert severity and explanation fields for the current frontend adapter.
 - [x] Import the verified backend contract into the frontend branch.
 - [x] Replace the usual-day frontend mock with repository calls and retain local fallback.
-- [ ] Run the combined build, unit tests, RLS checks, and active-flow smoke test after branch integration.
+- [x] Run the combined build, unit tests, RLS checks, and active-flow smoke test after branch integration.
 - [x] Review synthetic-data labels and safety copy for the frontend flow.
 - [ ] Merge the verified integration pull request into `main`.
 
 ### Current Blockers
 
-- Combined cloud/RLS and browser smoke verification are still pending; the frontend uses deterministic local fallback when `.env.local` is unavailable.
-- Live cloud smoke testing still needs a verified `.env.local` at runtime; deterministic local fallback is verified without it.
+- Browser automation is unavailable in the current Codex Work settings; automated Active-flow coverage and the production-server HTTP smoke check pass.
 
 ### Next Coordination Point
 
-NASA context and backend quality mapping are implemented and verified. Next coordination point: run combined cloud/RLS and active-flow smoke verification, then merge the verified branches into `main`.
+The integration branch is verified and pushed as `d57085b`. Next coordination point: review and merge its pull request into `main`.
 
 ## 📈 Delegated Progress Rules
 

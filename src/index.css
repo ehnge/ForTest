@@ -5,3 +5,6 @@ body { min-width: 320px; margin: 0; }
 button, input, select, textarea { font: inherit; }
 button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 3px solid #6ee7f9; outline-offset: 3px; }
 .star-field { background-image: radial-gradient(circle at 20% 15%, rgba(103,232,249,.16), transparent 28%), radial-gradient(circle at 75% 0%, rgba(139,92,246,.18), transparent 24%), radial-gradient(circle at 50% 70%, rgba(14,116,144,.08), transparent 32%); }
+.field { width: 100%; border: 1px solid rgb(71 85 105 / 0.9); border-radius: 0.75rem; background: rgb(2 6 23 / 0.65); padding: 0.75rem 0.875rem; color: #f8fafc; }
+.field::placeholder { color: #64748b; }
+.field:hover { border-color: rgb(103 232 249 / 0.55); }

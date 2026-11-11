@@ -16,13 +16,14 @@ Horizon is a research demo health companion for space travelers. It uses synthet
 - **Git:** Initial local commit exists and `origin` points to the HEXARA GitHub repository.
 - **Agent guidance:** Supabase, Postgres best practices, and security best practices are installed.
 - **Backend foundation:** Verified schema, RLS, four synthetic travelers, 180 days of six daily metrics, three event kinds, typed repository with deterministic fallback, eight backend tests, and live parity checks. See `docs/backend-contract.md`.
+- **Backend simulation contract:** Repository reads now accept optional replay/scenario controls and report `ready`, `stale-data`, `missing-data`, `offline`, or `insufficient-baseline` quality states; 9 backend tests pass.
 - **Workflow definition:** The active-astronaut workflow and the three-stage product flow have been analyzed and converted into the phased roadmap below.
 
 ### 🟡 Active Focus
 
 > **AGENT NOTE:** Do not begin final Horizon UI work until the minimal backend foundation is available, unless the user explicitly changes direction.
 
-- **Immediate backend task:** Implement and test the rolling 30-day personal baseline in an isolated domain module; then add the specified explainable alert rules.
+- **Immediate backend task:** Add the optional NASA DONKI solar-event adapter with caching, rate-limit handling, and a labeled synthetic fallback.
 - **Required tables:** `sample_people`, `health_observations`, and `demo_events`.
 - **Required seed:** Four synthetic travelers with 180 days of observations.
 - **Security requirement:** Enable RLS on every exposed table and allow only the intended synthetic-data reads.
@@ -53,7 +54,7 @@ Complete phases in order. Do not mark a phase complete until its verification ch
 - [x] Seed four traveler profiles.
 - [x] Generate 180 days of deterministic observations per traveler.
 - [x] Add the 3-day radiation spike, 5-day illness-like episode, and 5-day sleep disruption.
-- [ ] Add seed control and replay-event behavior.
+- [x] Add seed control and replay-event behavior to the repository contract.
 - [x] Verify row counts, metric units, dates, and RLS behavior.
 
 **Exit check:** The browser can load synthetic profiles and observations from Supabase, and the app has a deterministic local fallback.
@@ -61,12 +62,12 @@ Complete phases in order. Do not mark a phase complete until its verification ch
 ### Phase 2 — Monitoring engine and data quality
 
 - [x] Add typed domain types and a Supabase repository layer.
-- [ ] Implement the rolling 30-day personal baseline.
-- [ ] Implement the `>3 SD` single-reading alert rule.
-- [ ] Implement the `>2 SD on 3 of the last 5 days` sustained-shift rule.
-- [ ] Include a plain-language reason with every alert.
-- [ ] Add usual, recovery-concern, and sensor-disconnected scenarios.
-- [ ] Add insufficient-baseline, stale-data, missing-data, and offline states.
+- [x] Implement the rolling 30-day personal baseline on the frontend integration branch.
+- [x] Implement and test the `>3 SD` single-reading alert rule on the frontend integration branch.
+- [x] Implement and test the `>2 SD on 3 of the last 5 days` sustained-shift rule on the frontend integration branch.
+- [x] Include a plain-language reason with every alert on the frontend integration branch.
+- [x] Add usual, recovery-concern, and sensor-disconnected scenarios across the branches.
+- [x] Add insufficient-baseline, stale-data, missing-data, and offline repository states.
 - [ ] Ensure exercise-related heart-rate changes do not trigger recovery alerts by themselves.
 
 **Exit check:** Alert decisions are deterministic, explainable, unit-tested, and independent from the UI.
@@ -293,7 +294,7 @@ Initial shared types:
 - [x] Add the radiation, illness-like, and sleep-disruption events.
 - [x] Add typed domain models and repository functions.
 - [ ] Implement baseline and explainable alert rules.
-- [ ] Add simulation scenarios and deterministic replay.
+- [x] Add simulation scenarios and deterministic replay.
 - [ ] Add NASA DONKI caching and mock fallback.
 - [x] Add backend/data tests and integration documentation.
 
@@ -311,11 +312,11 @@ Initial shared types:
 ### Current Blockers
 
 - Backend foundation has no active access blockers. Supabase management and publishable-key reads work for `chfvsmbsgdwauqbwnamv`.
-- Shared types and repository functions require frontend-owner review before UI integration. The existing connection-test page still queries Supabase directly; frontend integration remains pending.
+- NASA DONKI integration and combined branch verification remain pending; the frontend branch now uses repository adapters instead of direct component queries.
 
 ### Next Coordination Point
 
-After Agent 2 publishes the shared types and repository contract, Agent 1 replaces the frontend mock data with the backend repository and both agents run the integration checklist.
+After the NASA adapter is published, both agents review the shared alert/data-quality fields and run the combined integration checklist before merging into `main`.
 
 ## 📈 Delegated Progress Rules
 
@@ -333,4 +334,4 @@ After Agent 2 publishes the shared types and repository contract, Agent 1 replac
 - `npm run test:db` passed using only the publishable key: all cloud profiles, observations, and events exactly match local fixtures; pagination and date filters work without fallback. `supabase/verify.sql` passed: RLS flags, both client roles' read grants, absence of writes, and denied mutation probes (rolled back). Security and performance advisors returned no findings.
 - `npm test` passed (8 backend tests); `npm run build` passed; `git diff --check` passed. Node tests and Vite needed permission to spawn workers/esbuild after sandbox `spawn EPERM`. CLI v3 failed to resolve its Windows binary; pinned CLI 2.81.3 generated the migration, then the filename was aligned with remote migration history. No local Docker database was available; remote and Data API checks were used.
 - Shared contracts and integration notes: `src/domain/types.ts`, `src/data/repository.ts`, `docs/backend-contract.md`. No frontend files, layout, navigation, or alert thresholds changed.
-- Remaining backend work: baseline/alert engine and tests, simulation/replay controls, data-quality states, NASA DONKI caching/fallback. The generator supports seeds, but replay behavior remains unchecked. Frontend contract agreement and UI integration remain unchecked.
+- Remaining backend work: NASA DONKI caching/fallback and combined integration verification. Baseline/alert, replay, and data-quality milestones are implemented and verified across the two branches.

@@ -17,8 +17,9 @@ export interface DemoEvent {
   id: string; person_id: string; kind: 'radiation_spike' | 'illness_like' | 'sleep_disruption';
   starts_on: string; ends_on: string; description: string; seed: number; is_synthetic: true;
 }
-export type SimulationScenario = 'usual' | 'recovery-concern' | 'sensor-disconnected';
+export type SimulationScenario = 'usual' | 'recovery-concern' | 'sensor-disconnected' | 'stale' | 'offline';
 export type DataQualityState = 'ready' | 'insufficient-baseline' | 'stale-data' | 'missing-data' | 'offline';
+export interface SimulationControls { seed: number; replayCount: number; scenario?: SimulationScenario }
 export interface Alert {
   id: string; person_id: string; metric: MetricName; observed_on: string;
   rule: 'single-reading' | 'sustained-shift'; severity: 'caution'; explanation: string;
@@ -26,9 +27,11 @@ export interface Alert {
 export interface DemoDataset { people: Traveler[]; observations: Observation[]; events: DemoEvent[] }
 export interface RepositoryResult<T> {
   data: T; source: 'supabase' | 'local'; warning?: string;
+  quality?: DataQualityState;
 }
+export interface ObservationQueryOptions { from?: string; to?: string; controls?: SimulationControls }
 export interface HorizonRepository {
   listPeople(): Promise<RepositoryResult<Traveler[]>>;
-  listObservations(personId: string, options?: { from?: string; to?: string }): Promise<RepositoryResult<Observation[]>>;
-  listEvents(personId: string): Promise<RepositoryResult<DemoEvent[]>>;
+  listObservations(personId: string, options?: ObservationQueryOptions): Promise<RepositoryResult<Observation[]>>;
+  listEvents(personId: string, options?: { controls?: SimulationControls }): Promise<RepositoryResult<DemoEvent[]>>;
 }

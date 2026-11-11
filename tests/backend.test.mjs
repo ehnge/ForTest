@@ -41,6 +41,19 @@ test('local repository filters dates, preserves empty results and reports fallba
   assert.throws(() => repo.listObservations('traveler-01', {from:'2026-02-30'}));
   assert.throws(() => repo.listObservations('traveler-01', {from:dateAt(4), to:dateAt(2)}));
 });
+test('simulation controls expose deterministic replay and data-quality states', async () => {
+  const repo = createHorizonRepository(null);
+  const replay = await repo.listEvents('traveler-01', {controls:{seed:42, replayCount:1, scenario:'usual'}});
+  assert.equal(replay.source, 'local');
+  assert.match(replay.warning, /Replay/);
+  const stale = await repo.listObservations('traveler-01', {controls:{seed:42, replayCount:0, scenario:'stale'}});
+  assert.equal(stale.quality, 'stale-data');
+  const disconnected = await repo.listObservations('traveler-01', {controls:{seed:42, replayCount:0, scenario:'sensor-disconnected'}});
+  assert.equal(disconnected.data.length, 0);
+  assert.equal(disconnected.quality, 'missing-data');
+  const short = await repo.listObservations('traveler-01', {from:dateAt(0), to:dateAt(1), controls:{seed:42, replayCount:0}});
+  assert.equal(short.quality, 'insufficient-baseline');
+});
 function mockClient(fetcher) {
   return createClient('https://test.supabase.co', 'sb_publishable_test', {
     auth:{persistSession:false}, global:{fetch:fetcher},

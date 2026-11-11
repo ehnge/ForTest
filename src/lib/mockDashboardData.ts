@@ -1,4 +1,4 @@
-import type { Alert, MetricCardData, SimulationScenario, TravelerProfile } from "../types/horizon";
+import type { Alert, MetricCardData, SimulationControls, SimulationScenario, TravelerProfile } from "../types/horizon";
 
 const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 const points = (values: number[], baseline: number, alertedDays: number[] = []) => values.map((value, index) => ({ day: days[index], value, baseline, alert: alertedDays.includes(index) }));
@@ -18,7 +18,7 @@ const usualMetrics: MetricCardData[] = [
   { metric: "radiation_dose", label: "Radiation dose", unit: "mSv", value: 0.5, baseline: 0.5, trend: "steady", plainLanguage: "At your usual simulated daily level.", points: points([.5,.5,.48,.5,.51,.5,.5], .5) },
 ];
 
-export function getScenarioData(scenario: SimulationScenario): { metrics: MetricCardData[]; alert: Alert | null } {
+export function getScenarioData(scenario: SimulationScenario, _controls: SimulationControls): { metrics: MetricCardData[]; alert: Alert | null } {
   if (scenario !== "recovery_concern") return { metrics: usualMetrics, alert: null };
   const metrics = usualMetrics.map((metric) => ({ ...metric, points: [...metric.points] }));
   metrics[0] = { ...metrics[0], value: 4.9, trend: "down", plainLanguage: "Below your usual sleep range for four of the last five days.", points: points([6.4,5.4,5.1,4.8,4.9,4.7,4.9], 6.5, [2,3,4,5,6]) };

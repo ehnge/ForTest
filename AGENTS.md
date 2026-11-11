@@ -26,6 +26,7 @@ Horizon is a research demo health companion for space travelers. It uses synthet
 - **Accessible stage shell:** Workspace labels follow the selected stage, and mobile navigation exposes the active page through `aria-current`.
 - **Trend alert explanations:** Trends exposes an expandable plain-language reason for the active mock alert.
 - **Simulation replay controls:** Profile persists a local seed and replay count, with an accessible replay action for the mock run.
+- **Simulation contract:** `DashboardRepository` accepts typed seed and replay controls so a backend adapter can reproduce the same UI contract.
 - **Frontend verification:** Browser smoke checks confirmed stage switching and Trends navigation; eight UI tests, `npm run build`, and `git diff --check` pass.
 
 ### 🟡 Active Focus
@@ -299,6 +300,7 @@ Initial shared types:
 - [x] Make shell labels and mobile active navigation stage-aware and accessible.
 - [x] Add an expandable plain-language explanation for trend alert markers.
 - [x] Add LocalStorage-backed simulation seed and replay controls.
+- [x] Pass typed seed and replay controls through the frontend repository boundary.
 - [ ] Integrate Agent 1's repository contract.
 - [ ] Verify the complete Active Astronaut flow.
 

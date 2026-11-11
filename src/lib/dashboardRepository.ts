@@ -1,4 +1,4 @@
-import type { Alert, MetricCardData, SimulationScenario, TravelerProfile } from "../types/horizon";
+import type { Alert, MetricCardData, SimulationControls, SimulationScenario, TravelerProfile } from "../types/horizon";
 
 export interface DashboardSnapshot {
   metrics: MetricCardData[];
@@ -11,5 +11,5 @@ export interface DashboardSnapshot {
  */
 export interface DashboardRepository {
   getProfiles(): TravelerProfile[];
-  getSnapshot(scenario: SimulationScenario): DashboardSnapshot;
+  getSnapshot(scenario: SimulationScenario, controls: SimulationControls): DashboardSnapshot;
 }

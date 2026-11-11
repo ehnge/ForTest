@@ -19,7 +19,7 @@ export default function App() {
   const loadingTimer = useRef<number | undefined>(undefined);
 
   const profile = profiles.find((candidate) => candidate.id === profileId) ?? profiles[0];
-  const dashboard = useMemo(() => mockDashboardRepository.getSnapshot(scenario), [scenario]);
+  const dashboard = useMemo(() => mockDashboardRepository.getSnapshot(scenario, { seed, replayCount }), [scenario, seed, replayCount]);
   const dataQuality = scenario === "sensor_disconnected" ? "disconnected" : scenario === "offline" ? "offline" : scenario === "stale" ? "stale" : "current";
 
   const setStageAndProfile = (nextStage: LifeStage) => {

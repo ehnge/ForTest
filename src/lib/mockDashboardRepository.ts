@@ -3,5 +3,5 @@ import type { DashboardRepository } from "./dashboardRepository";
 
 export const mockDashboardRepository: DashboardRepository = {
   getProfiles: () => profiles,
-  getSnapshot: (scenario) => getScenarioData(scenario),
+  getSnapshot: (scenario, controls) => getScenarioData(scenario, controls),
 };

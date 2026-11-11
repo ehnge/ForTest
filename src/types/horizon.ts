@@ -3,6 +3,7 @@ export type MetricName = "resting_hr" | "hrv" | "spo2" | "sleep_hours" | "core_t
 export type SimulationScenario = "usual" | "recovery_concern" | "sensor_disconnected" | "stale" | "offline";
 export type DataQualityState = "current" | "stale" | "disconnected" | "offline" | "insufficient_baseline";
 export type AlertSeverity = "normal" | "watch" | "talk_to_crew_medic";
+export interface SimulationControls { seed: number; replayCount: number; }
 
 export interface MetricPoint { day: string; value: number; baseline: number; alert?: boolean; }
 export interface MetricCardData { metric: MetricName; label: string; unit: string; value: number; baseline: number; trend: "up" | "down" | "steady"; plainLanguage: string; points: MetricPoint[]; }

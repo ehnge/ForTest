@@ -24,7 +24,8 @@ Horizon is a research demo health companion for space travelers. It uses synthet
 - **Frontend repository boundary:** UI state reads typed profiles and snapshots through `DashboardRepository`; the current adapter is mock-only and replaceable.
 - **Wellbeing support action:** The “Talk to a person” panel opens local crew, mission-support, and family-contact options without sending data.
 - **Accessible stage shell:** Workspace labels follow the selected stage, and mobile navigation exposes the active page through `aria-current`.
-- **Frontend verification:** Browser smoke checks confirmed stage switching and Trends navigation; six UI tests, `npm run build`, and `git diff --check` pass.
+- **Trend alert explanations:** Trends exposes an expandable plain-language reason for the active mock alert.
+- **Frontend verification:** Browser smoke checks confirmed stage switching and Trends navigation; seven UI tests, `npm run build`, and `git diff --check` pass.
 
 ### 🟡 Active Focus
 
@@ -295,6 +296,7 @@ Initial shared types:
 - [x] Isolate UI data access behind a typed mock repository adapter.
 - [x] Make the local “Talk to a person” support action functional.
 - [x] Make shell labels and mobile active navigation stage-aware and accessible.
+- [x] Add an expandable plain-language explanation for trend alert markers.
 - [ ] Integrate Agent 1's repository contract.
 - [ ] Verify the complete Active Astronaut flow.
 

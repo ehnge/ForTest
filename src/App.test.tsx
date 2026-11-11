@@ -60,6 +60,19 @@ describe("Horizon app shell", () => {
     expect(screen.getByText(/charts remain visible for context/)).toBeInTheDocument();
   });
 
+  it("opens the plain-language reason for a trend alert", async () => {
+    const user = userEvent.setup();
+    render(<App />);
+
+    await user.click(screen.getByRole("button", { name: "Profile" }));
+    await user.selectOptions(screen.getByRole("combobox", { name: "Demo scenario" }), "recovery_concern");
+    await waitFor(() => expect(screen.queryByText("Loading simulated signals…")).not.toBeInTheDocument());
+    await user.click(screen.getAllByRole("button", { name: "Trends" })[0]);
+    await user.click(screen.getByRole("button", { name: "Show alert reason" }));
+
+    expect(screen.getByText(/Sleep was below your usual range on 4 of the last 5 days/)).toBeInTheDocument();
+  });
+
   it("saves a wellbeing check-in to local storage", async () => {
     const user = userEvent.setup();
     render(<App />);

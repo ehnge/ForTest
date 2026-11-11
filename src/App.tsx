@@ -38,7 +38,7 @@ export default function App() {
   const content = (() => {
     switch (activeView) {
       case "trends":
-        return <TrendsView metrics={dashboard.metrics} dataQuality={dataQuality} loading={loading} />;
+        return <TrendsView metrics={dashboard.metrics} alert={dashboard.alert} dataQuality={dataQuality} loading={loading} />;
       case "wellbeing":
         return <WellbeingView checkIn={checkIn} onCheckInChange={setCheckIn} privacy={privacy} onPrivacyChange={setPrivacy} />;
       case "guidance":

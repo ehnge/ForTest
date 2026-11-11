@@ -15,17 +15,18 @@ Horizon is a research demo health companion for space travelers. It uses synthet
 - **Build verification:** `npm run build` passes.
 - **Git:** Initial local commit exists and `origin` points to the HEXARA GitHub repository.
 - **Agent guidance:** Supabase, Postgres best practices, and security best practices are installed.
+- **Backend foundation:** Verified schema, RLS, four synthetic travelers, 180 days of six daily metrics, three event kinds, typed repository with deterministic fallback, eight backend tests, and live parity checks. See `docs/backend-contract.md`.
 - **Workflow definition:** The active-astronaut workflow and the three-stage product flow have been analyzed and converted into the phased roadmap below.
 
 ### 🟡 Active Focus
 
 > **AGENT NOTE:** Do not begin final Horizon UI work until the minimal backend foundation is available, unless the user explicitly changes direction.
 
-- **Immediate backend task:** Configure and authenticate Supabase access on `codex/backend-data`, then verify the target project before schema work.
+- **Immediate backend task:** Implement and test the rolling 30-day personal baseline in an isolated domain module; then add the specified explainable alert rules.
 - **Required tables:** `sample_people`, `health_observations`, and `demo_events`.
 - **Required seed:** Four synthetic travelers with 180 days of observations.
 - **Security requirement:** Enable RLS on every exposed table and allow only the intended synthetic-data reads.
-- **Current blocker (2026-11-11):** Local configuration matches project `chfvsmbsgdwauqbwnamv` and `.env.local` is ignored. Supabase MCP is configured for that project; OAuth authorization is pending in the browser. Read-only Data API queries return HTTP 404 / `PGRST205` for all three required tables. Database management access and RLS remain unverified.
+- **Current blocker (2026-11-11):** None for backend foundation. Authenticated management access and publishable-key reads are verified. Shared contract review and frontend integration are pending.
 
 ## 🧭 Implementation Roadmap
 
@@ -45,21 +46,21 @@ Complete phases in order. Do not mark a phase complete until its verification ch
 
 ### Phase 1 — Synthetic data and Supabase foundation
 
-- [ ] Confirm access to the configured Supabase project.
-- [ ] Create migrations for `sample_people`, `health_observations`, and `demo_events`.
-- [ ] Enable RLS on every exposed table.
-- [ ] Add read-only policies for public synthetic demo data.
-- [ ] Seed four traveler profiles.
-- [ ] Generate 180 days of deterministic observations per traveler.
-- [ ] Add the 3-day radiation spike, 5-day illness-like episode, and 5-day sleep disruption.
+- [x] Confirm access to the configured Supabase project.
+- [x] Create migrations for `sample_people`, `health_observations`, and `demo_events`.
+- [x] Enable RLS on every exposed table.
+- [x] Add read-only policies for public synthetic demo data.
+- [x] Seed four traveler profiles.
+- [x] Generate 180 days of deterministic observations per traveler.
+- [x] Add the 3-day radiation spike, 5-day illness-like episode, and 5-day sleep disruption.
 - [ ] Add seed control and replay-event behavior.
-- [ ] Verify row counts, metric units, dates, and RLS behavior.
+- [x] Verify row counts, metric units, dates, and RLS behavior.
 
 **Exit check:** The browser can load synthetic profiles and observations from Supabase, and the app has a deterministic local fallback.
 
 ### Phase 2 — Monitoring engine and data quality
 
-- [ ] Add typed domain types and a Supabase repository layer.
+- [x] Add typed domain types and a Supabase repository layer.
 - [ ] Implement the rolling 30-day personal baseline.
 - [ ] Implement the `>3 SD` single-reading alert rule.
 - [ ] Implement the `>2 SD on 3 of the last 5 days` sustained-shift rule.
@@ -128,8 +129,8 @@ Complete phases in order. Do not mark a phase complete until its verification ch
 
 ## 🔴 Current Backlog Summary
 
-- **Highest priority:** Supabase project access, schema, RLS, and synthetic seed data.
-- **Next:** Typed repository, baseline calculations, alert engine, and data-quality states.
+- **Highest priority:** Rolling personal baseline and explainable alert engine with domain tests.
+- **Next:** Simulation/replay and data-quality states; frontend-owner review of the repository contract.
 - **Then:** Complete Active Astronaut flow.
 - **After core demo:** Trainee and Retired previews, NASA context, styling, privacy, and tests.
 
@@ -285,16 +286,16 @@ Initial shared types:
 
 ### Agent 2 — Backend Checklist
 
-- [ ] Confirm access to the configured Supabase project.
-- [ ] Create migrations for `sample_people`, `health_observations`, and `demo_events`.
-- [ ] Enable RLS and verify read-only synthetic-data policies.
-- [ ] Seed four profiles and 180 days of observations.
-- [ ] Add the radiation, illness-like, and sleep-disruption events.
-- [ ] Add typed domain models and repository functions.
+- [x] Confirm access to the configured Supabase project.
+- [x] Create migrations for `sample_people`, `health_observations`, and `demo_events`.
+- [x] Enable RLS and verify read-only synthetic-data policies.
+- [x] Seed four profiles and 180 days of observations.
+- [x] Add the radiation, illness-like, and sleep-disruption events.
+- [x] Add typed domain models and repository functions.
 - [ ] Implement baseline and explainable alert rules.
 - [ ] Add simulation scenarios and deterministic replay.
 - [ ] Add NASA DONKI caching and mock fallback.
-- [ ] Add backend/data tests and integration documentation.
+- [x] Add backend/data tests and integration documentation.
 
 ### Shared Integration Checklist
 
@@ -309,8 +310,8 @@ Initial shared types:
 
 ### Current Blockers
 
-- Backend access recheck (2026-11-11): `.env.local` is present and ignored; URL matches `chfvsmbsgdwauqbwnamv` and a publishable key is present. Project-scoped Supabase MCP configuration was added locally and OAuth started. Browser authorization is pending. GET queries for `sample_people`, `health_observations`, and `demo_events` each return HTTP 404 / `PGRST205`. Schema and RLS checks require authenticated management access.
-- The teammate must complete the Agent 2 backend work before the frontend can use live repository data.
+- Backend foundation has no active access blockers. Supabase management and publishable-key reads work for `chfvsmbsgdwauqbwnamv`.
+- Shared types and repository functions require frontend-owner review before UI integration. The existing connection-test page still queries Supabase directly; frontend integration remains pending.
 
 ### Next Coordination Point
 
@@ -324,15 +325,12 @@ After Agent 2 publishes the shared types and repository contract, Agent 1 replac
 - Every blocker must include the exact error or missing dependency.
 - No feature implementation starts from this section alone; each agent should receive one specific task prompt.
 
-## Backend access inspection - 2026-11-11
+## Backend foundation verification - 2026-11-11
 
-- Completed the first small backend task: read this guide, inspected the clean scaffold and browser client, and checked access configuration on `codex/backend-data`. Project accessibility remains unconfirmed; no database completion boxes are checked.
-- Read the Supabase and Supabase Postgres best-practice skills found in the local plugin cache. No schema, seed, shared types, alert thresholds, or frontend files changed.
-- Verification: `npm ci` passed (0 reported vulnerabilities); `npm run build` passed with permission to spawn esbuild (sandbox attempt failed with `spawn EPERM`); `git diff --check` passed. No backend tests or test script exist yet; `npm run test --if-present` ran no tests. Database verification queries could not run because project configuration and management access are missing.
-- Next smallest task: supply the intended project URL and publishable key in ignored `.env.local`, connect authenticated Supabase management access, and verify the project. Then create and verify the minimal schema and RLS before seeding data. Typed repository, alert engine, scenarios/replay, and NASA DONKI remain pending.
-
-### Project-scoped connection follow-up
-
-- Verified existing ignored local configuration targets `chfvsmbsgdwauqbwnamv`; no credentials were printed or committed. Configured the project-scoped Supabase MCP server in local Codex settings and initiated OAuth; authorization is pending.
-- Verification: read-only GET queries to all three required tables returned HTTP 404 / `PGRST205`; `git check-ignore .env.local` passed; `npm run build` passed; `git diff --check` passed. `npm test` failed with `Missing script: "test"`; no backend tests exist yet. No database mutation or RLS verification was possible.
-- Next smallest task: complete browser OAuth, reload the session to expose the connected tools, and run a read-only management query before implementing migrations, RLS, deterministic seeds, shared types, and repository functions. These implementation items remain unchecked.
+- Authenticated project-scoped MCP query succeeded; public schema was empty before implementation. `.env.local` matches the project and `git check-ignore .env.local` passes. No credentials were committed.
+- Applied `horizon_foundation`; remote migration version `20261111153200` matches the local SQL file. All three tables have RLS and synthetic-only SELECT policies for `anon` and `authenticated`; client write privileges are revoked. No views or privileged functions were added.
+- Seeded 4 travelers, 4,320 readings, and 12 events. Every traveler has 1,080 readings across 180 days (2026-01-01 through 2026-06-29), with 6 unit-validated metrics per day. Events have inclusive durations 3/5/5 days. Re-running the deterministic seed leaves results unchanged.
+- `npm run test:db` passed using only the publishable key: all cloud profiles, observations, and events exactly match local fixtures; pagination and date filters work without fallback. `supabase/verify.sql` passed: RLS flags, both client roles' read grants, absence of writes, and denied mutation probes (rolled back). Security and performance advisors returned no findings.
+- `npm test` passed (8 backend tests); `npm run build` passed; `git diff --check` passed. Node tests and Vite needed permission to spawn workers/esbuild after sandbox `spawn EPERM`. CLI v3 failed to resolve its Windows binary; pinned CLI 2.81.3 generated the migration, then the filename was aligned with remote migration history. No local Docker database was available; remote and Data API checks were used.
+- Shared contracts and integration notes: `src/domain/types.ts`, `src/data/repository.ts`, `docs/backend-contract.md`. No frontend files, layout, navigation, or alert thresholds changed.
+- Remaining backend work: baseline/alert engine and tests, simulation/replay controls, data-quality states, NASA DONKI caching/fallback. The generator supports seeds, but replay behavior remains unchecked. Frontend contract agreement and UI integration remain unchecked.

@@ -38,17 +38,18 @@ Horizon is a research demo health companion for space travelers. It uses synthet
 - **Explainable alert engine:** `src/domain/alertEngine.ts` now evaluates personal 30-day baselines, single-reading and sustained-shift rules, emits plain-language reasons, and ignores exercise heart-rate readings; 16 tests pass.
 - **NASA radiation context:** `src/lib/nasaDonki.ts` fetches optional DONKI CME events with browser caching and a labeled mock fallback; Home displays a non-diagnostic Safe/Caution/High radiation context card.
 - **Backend quality integration:** The frontend imports backend commit `9294452` and maps repository quality metadata into current, stale, disconnected, offline, and insufficient-baseline UI states.
+- **Integration branch:** `codex/integration` now includes the verified frontend flow, backend migration/seed/verification assets, replay/data-quality contract, and combined backend scripts; the package scripts preserve both frontend and backend test commands.
 - **Integration verification:** Backend unit tests (9), backend build, and live publishable-key parity checks (4 profiles, 4,320 observations, 12 events) pass; frontend tests (18), build, and diff checks pass.
 
 ### 🟡 Active Focus
 
 > **AGENT NOTE:** The user explicitly authorized frontend work with typed mock data while the backend contract is pending. Do not connect live Supabase data until Agent 1 publishes the shared repository contract.
 
-- **Immediate task:** Prepare the integration branch, run the combined verification, and resolve any shared-contract conflicts before the pull request into `main`.
+- **Immediate task:** Run the combined verification on `codex/integration`, then complete the manual active-flow smoke test before opening the integration pull request.
 - **Required tables:** `sample_people`, `health_observations`, and `demo_events`.
 - **Required seed:** Four synthetic travelers with 180 days of observations.
 - **Security requirement:** Enable RLS on every exposed table and allow only the intended synthetic-data reads.
-- **Current blocker:** Browser automation is unavailable in the current Codex Work settings, so the active-flow smoke test must be completed manually or in a browser-enabled session; all automated and live database checks pass.
+- **Current blocker:** Browser automation is unavailable in the current Codex Work settings, so the active-flow smoke test must be completed manually or in a browser-enabled session; automated and live database checks are next.
 
 ## 🧭 Implementation Roadmap
 

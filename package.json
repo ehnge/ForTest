@@ -7,7 +7,10 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "preview": "vite preview",
-    "test": "vitest run"
+    "test": "vitest run src",
+    "test:backend": "node --import ./tests/register.mjs --test tests/*.test.mjs",
+    "test:db": "node --import ./tests/register.mjs scripts/check-database.mjs",
+    "seed:generate": "node --import ./tests/register.mjs scripts/generate-seed.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.57.0",

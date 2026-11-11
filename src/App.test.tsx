@@ -197,4 +197,19 @@ describe("Horizon app shell", () => {
 
     expect(JSON.parse(window.localStorage.getItem("horizon:retired-summary-fields") ?? "{}")).toMatchObject({ reflection: true });
   });
+
+  it("restores local stage and check-in state after a refresh", async () => {
+    const user = userEvent.setup();
+    const first = render(<App />);
+    await user.selectOptions(screen.getByRole("combobox", { name: "Life stage" }), "retired");
+    await user.click(screen.getAllByRole("button", { name: "Wellbeing" })[0]);
+    await user.selectOptions(screen.getByRole("combobox", { name: "Mood" }), "5");
+    await user.click(screen.getByRole("button", { name: "Save check-in locally" }));
+    first.unmount();
+
+    render(<App />);
+    expect(screen.getByRole("combobox", { name: "Life stage" })).toHaveValue("retired");
+    await user.click(screen.getAllByRole("button", { name: "Wellbeing" })[0]);
+    expect(screen.getByRole("combobox", { name: "Mood" })).toHaveValue("5");
+  });
 });

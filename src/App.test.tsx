@@ -73,6 +73,20 @@ describe("Horizon app shell", () => {
     expect(screen.getByText(/Sleep was below your usual range on 4 of the last 5 days/)).toBeInTheDocument();
   });
 
+  it("persists the simulation seed and replays events locally", async () => {
+    const user = userEvent.setup();
+    render(<App />);
+
+    await user.click(screen.getByRole("button", { name: "Profile" }));
+    const seed = screen.getByRole("spinbutton", { name: "Simulation seed" });
+    await user.clear(seed);
+    await user.type(seed, "31415");
+    await user.click(screen.getByRole("button", { name: "Replay events" }));
+
+    expect(window.localStorage.getItem("horizon:seed")).toBe("31415");
+    expect(screen.getByText("Replay 1 · mock run")).toBeInTheDocument();
+  });
+
   it("saves a wellbeing check-in to local storage", async () => {
     const user = userEvent.setup();
     render(<App />);

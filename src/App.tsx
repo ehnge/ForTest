@@ -10,6 +10,8 @@ export default function App() {
   const [activeView, setActiveView] = useState<ViewName>("home");
   const [stage, setStage] = usePersistedState<LifeStage>("horizon:life-stage", "active");
   const [scenario, setScenario] = usePersistedState<SimulationScenario>("horizon:scenario", "usual");
+  const [seed, setSeed] = usePersistedState<number>("horizon:seed", 2026);
+  const [replayCount, setReplayCount] = usePersistedState<number>("horizon:replay-count", 0);
   const [profileId, setProfileId] = usePersistedState("horizon:profile", profiles[0].id);
   const [checkIn, setCheckIn] = usePersistedState("horizon:wellbeing", { mood: "", stress: "", sleepQuality: "", note: "" });
   const [privacy, setPrivacy] = usePersistedState("horizon:privacy", { mood: true, notes: false, trends: true });
@@ -35,6 +37,20 @@ export default function App() {
     loadingTimer.current = window.setTimeout(() => setLoading(false), 180);
   };
 
+  const setSeedWithLoading = (nextSeed: number) => {
+    window.clearTimeout(loadingTimer.current);
+    setLoading(true);
+    setSeed(nextSeed);
+    loadingTimer.current = window.setTimeout(() => setLoading(false), 180);
+  };
+
+  const replayEvents = () => {
+    window.clearTimeout(loadingTimer.current);
+    setLoading(true);
+    setReplayCount((count) => count + 1);
+    loadingTimer.current = window.setTimeout(() => setLoading(false), 180);
+  };
+
   const content = (() => {
     switch (activeView) {
       case "trends":
@@ -44,7 +60,7 @@ export default function App() {
       case "guidance":
         return <GuidanceView stage={stage} />;
       case "profile":
-        return <ProfileView profile={profile} profiles={profiles} stage={stage} scenario={scenario} loading={loading} onProfileChange={setProfileId} onScenarioChange={setScenarioWithLoading} onStageChange={setStageAndProfile} />;
+        return <ProfileView profile={profile} profiles={profiles} stage={stage} scenario={scenario} seed={seed} replayCount={replayCount} loading={loading} onProfileChange={setProfileId} onScenarioChange={setScenarioWithLoading} onSeedChange={setSeedWithLoading} onReplay={replayEvents} onStageChange={setStageAndProfile} />;
       case "home":
       default:
         return <HomeView profile={profile} stage={stage} scenario={scenario} metrics={dashboard.metrics} alert={dashboard.alert} dataQuality={dataQuality} loading={loading} onViewChange={setActiveView} />;

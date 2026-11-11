@@ -25,7 +25,8 @@ Horizon is a research demo health companion for space travelers. It uses synthet
 - **Wellbeing support action:** The “Talk to a person” panel opens local crew, mission-support, and family-contact options without sending data.
 - **Accessible stage shell:** Workspace labels follow the selected stage, and mobile navigation exposes the active page through `aria-current`.
 - **Trend alert explanations:** Trends exposes an expandable plain-language reason for the active mock alert.
-- **Frontend verification:** Browser smoke checks confirmed stage switching and Trends navigation; seven UI tests, `npm run build`, and `git diff --check` pass.
+- **Simulation replay controls:** Profile persists a local seed and replay count, with an accessible replay action for the mock run.
+- **Frontend verification:** Browser smoke checks confirmed stage switching and Trends navigation; eight UI tests, `npm run build`, and `git diff --check` pass.
 
 ### 🟡 Active Focus
 
@@ -297,6 +298,7 @@ Initial shared types:
 - [x] Make the local “Talk to a person” support action functional.
 - [x] Make shell labels and mobile active navigation stage-aware and accessible.
 - [x] Add an expandable plain-language explanation for trend alert markers.
+- [x] Add LocalStorage-backed simulation seed and replay controls.
 - [ ] Integrate Agent 1's repository contract.
 - [ ] Verify the complete Active Astronaut flow.
 

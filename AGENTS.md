@@ -21,11 +21,11 @@ Horizon is a research demo health companion for space travelers. It uses synthet
 
 > **AGENT NOTE:** Do not begin final Horizon UI work until the minimal backend foundation is available, unless the user explicitly changes direction.
 
-- **Immediate task:** Resolve Supabase management access, then create the minimal schema and seed synthetic data.
+- **Immediate backend task:** Configure and authenticate Supabase access on `codex/backend-data`, then verify the target project before schema work.
 - **Required tables:** `sample_people`, `health_observations`, and `demo_events`.
 - **Required seed:** Four synthetic travelers with 180 days of observations.
 - **Security requirement:** Enable RLS on every exposed table and allow only the intended synthetic-data reads.
-- **Current blocker:** Supabase management access currently returns a permission error for the configured project.
+- **Current blocker (2026-11-11):** This device has no `.env.local`, no configured Supabase URL/publishable key or management credentials in its environment, and no Supabase MCP tools or installed CLI. The previously reported permission error cannot be reproduced without a configured project.
 
 ## 🧭 Implementation Roadmap
 
@@ -309,7 +309,7 @@ Initial shared types:
 
 ### Current Blockers
 
-- Supabase management access currently returns a permission error for the configured project.
+- Backend access inspection (2026-11-11): no `.env.local`; `VITE_SUPABASE_URL`, `VITE_SUPABASE_PUBLISHABLE_KEY`, `SUPABASE_ACCESS_TOKEN`, and `DATABASE_URL` are unset. No Supabase MCP tools or installed Supabase CLI, `psql`, or Docker. Live queries and RLS checks cannot run. Configure the intended project and authenticate management access locally; never commit credentials.
 - The teammate must complete the Agent 2 backend work before the frontend can use live repository data.
 
 ### Next Coordination Point
@@ -323,3 +323,10 @@ After Agent 2 publishes the shared types and repository contract, Agent 1 replac
 - Incomplete tasks stay unchecked.
 - Every blocker must include the exact error or missing dependency.
 - No feature implementation starts from this section alone; each agent should receive one specific task prompt.
+
+## Backend access inspection ? 2026-11-11
+
+- Completed the first small backend task: read this guide, inspected the clean scaffold and browser client, and checked access configuration on `codex/backend-data`. Project accessibility remains unconfirmed; no database completion boxes are checked.
+- Read the Supabase and Supabase Postgres best-practice skills found in the local plugin cache. No schema, seed, shared types, alert thresholds, or frontend files changed.
+- Verification: `npm ci` passed (0 reported vulnerabilities); `npm run build` passed with permission to spawn esbuild (sandbox attempt failed with `spawn EPERM`); `git diff --check` passed. No backend tests or test script exist yet; `npm run test --if-present` ran no tests. Database verification queries could not run because project configuration and management access are missing.
+- Next smallest task: supply the intended project URL and publishable key in ignored `.env.local`, connect authenticated Supabase management access, and verify the project. Then create and verify the minimal schema and RLS before seeding data. Typed repository, alert engine, scenarios/replay, and NASA DONKI remain pending.

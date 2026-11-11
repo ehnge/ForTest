@@ -37,7 +37,7 @@ Horizon is a research demo health companion for space travelers. It uses synthet
 - **Required tables:** `sample_people`, `health_observations`, and `demo_events`.
 - **Required seed:** Four synthetic travelers with 180 days of observations.
 - **Security requirement:** Enable RLS on every exposed table and allow only the intended synthetic-data reads.
-- **Current blocker:** Supabase management access currently returns a permission error for the configured project.
+- **Current blocker:** Device Agent 1's branch currently contains only an access-inspection note: `.env.local`, Supabase environment variables, management credentials, CLI, and MCP access are unavailable, so no backend contract exists to integrate.
 
 ## 🧭 Implementation Roadmap
 
@@ -330,8 +330,8 @@ Initial shared types:
 
 ### Current Blockers
 
-- Supabase management access currently returns a permission error for the configured project.
-- Device Agent 1 must complete the backend work before Device Agent 2 can use live repository data.
+- Device Agent 1's access inspection (2026-11-11) found no `.env.local`, `VITE_SUPABASE_URL`, `VITE_SUPABASE_PUBLISHABLE_KEY`, `SUPABASE_ACCESS_TOKEN`, or `DATABASE_URL`, and no installed Supabase CLI, `psql`, Docker, or Supabase MCP access.
+- Device Agent 1 must publish migrations, shared types, and repository functions before Device Agent 2 can use live repository data; `origin/codex/backend-data` currently contains documentation only.
 
 ### Next Coordination Point
 

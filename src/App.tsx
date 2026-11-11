@@ -1,26 +1,43 @@
-import { useEffect, useState } from "react";
-import { supabase, supabaseConfigured } from "./lib/supabase";
+import { useMemo, useState } from "react";
+import { AppShell, type ViewName } from "./components/AppShell";
+import { GuidanceView, HomeView, ProfileView, TrendsView, WellbeingView } from "./components/WorkspaceViews";
+import { getScenarioData, profiles } from "./lib/mockDashboardData";
+import { usePersistedState } from "./lib/usePersistedState";
+import type { LifeStage, SimulationScenario } from "./types/horizon";
 
 export default function App() {
-  const [status, setStatus] = useState("Checking Supabase connection…");
-  const [details, setDetails] = useState("");
+  const [activeView, setActiveView] = useState<ViewName>("home");
+  const [stage, setStage] = usePersistedState<LifeStage>("horizon:life-stage", "active");
+  const [scenario, setScenario] = usePersistedState<SimulationScenario>("horizon:scenario", "usual");
+  const [profileId, setProfileId] = usePersistedState("horizon:profile", profiles[0].id);
+  const [checkIn, setCheckIn] = usePersistedState("horizon:wellbeing", { mood: "", stress: "", sleepQuality: "", note: "" });
+  const [privacy, setPrivacy] = usePersistedState("horizon:privacy", { mood: true, notes: false, trends: true });
 
-  useEffect(() => {
-    if (!supabaseConfigured || !supabase) {
-      setStatus("Missing Supabase environment variables");
-      setDetails("Copy .env.example to .env.local and add the project values.");
-      return;
+  const profile = profiles.find((candidate) => candidate.id === profileId) ?? profiles[0];
+  const dashboard = useMemo(() => getScenarioData(scenario), [scenario]);
+  const dataUnavailable = scenario === "sensor_disconnected" || scenario === "offline";
+
+  const setStageAndProfile = (nextStage: LifeStage) => {
+    setStage(nextStage);
+    const matchingProfile = profiles.find((candidate) => candidate.stage === nextStage);
+    if (matchingProfile) setProfileId(matchingProfile.id);
+  };
+
+  const content = (() => {
+    switch (activeView) {
+      case "trends":
+        return <TrendsView metrics={dashboard.metrics} dataUnavailable={dataUnavailable} />;
+      case "wellbeing":
+        return <WellbeingView checkIn={checkIn} onCheckInChange={setCheckIn} privacy={privacy} onPrivacyChange={setPrivacy} />;
+      case "guidance":
+        return <GuidanceView stage={stage} />;
+      case "profile":
+        return <ProfileView profile={profile} profiles={profiles} stage={stage} scenario={scenario} onProfileChange={setProfileId} onScenarioChange={setScenario} onStageChange={setStageAndProfile} />;
+      case "home":
+      default:
+        return <HomeView profile={profile} stage={stage} scenario={scenario} metrics={dashboard.metrics} alert={dashboard.alert} dataUnavailable={dataUnavailable} onViewChange={setActiveView} />;
     }
-    supabase.from("sample_people").select("id", { count: "exact", head: true }).then(({ count, error }) => {
-      if (error) {
-        setStatus("Supabase connected, but the schema is not ready");
-        setDetails(error.message);
-        return;
-      }
-      setStatus("Supabase connected");
-      setDetails(`sample_people rows: ${count ?? 0}`);
-    });
-  }, []);
+  })();
 
-  return <main><h1>Horizon backend scaffold</h1><p>{status}</p><p>{details}</p><p>Simulated data. Not medical advice. Not diagnostic.</p></main>;
+  return <AppShell activeView={activeView} onViewChange={setActiveView} stage={stage} onStageChange={setStageAndProfile}>{content}</AppShell>;
 }

@@ -16,12 +16,15 @@ Horizon is a research demo health companion for space travelers. It uses synthet
 - **Git:** Initial local commit exists and `origin` points to the HEXARA GitHub repository.
 - **Agent guidance:** Supabase, Postgres best practices, and security best practices are installed.
 - **Workflow definition:** The active-astronaut workflow and the three-stage product flow have been analyzed and converted into the phased roadmap below.
+- **Frontend shell:** Responsive navigation, stage selection, dark visual foundation, and the persistent disclaimer are wired into the app.
+- **Frontend mock flow:** Active Home, Trends, Wellbeing, Guidance, and Profile views are connected to typed mock data and LocalStorage state.
+- **Frontend verification:** Browser smoke checks confirmed stage switching and Trends navigation; `npm test` and `npm run build` pass.
 
 ### 🟡 Active Focus
 
-> **AGENT NOTE:** Do not begin final Horizon UI work until the minimal backend foundation is available, unless the user explicitly changes direction.
+> **AGENT NOTE:** The user explicitly authorized frontend work with typed mock data while the backend contract is pending. Do not connect live Supabase data until Agent 2 publishes the shared repository contract.
 
-- **Immediate task:** Resolve Supabase management access, then create the minimal schema and seed synthetic data.
+- **Immediate task:** Continue frontend data-quality states and then integrate Agent 2's typed repository contract when it is stable.
 - **Required tables:** `sample_people`, `health_observations`, and `demo_events`.
 - **Required seed:** Four synthetic travelers with 180 days of observations.
 - **Security requirement:** Enable RLS on every exposed table and allow only the intended synthetic-data reads.
@@ -272,14 +275,14 @@ Initial shared types:
 
 ### Agent 1 — Frontend Checklist
 
-- [ ] Build the app shell and responsive navigation.
-- [ ] Add the dark, high-contrast Horizon design system.
-- [ ] Build Active Home with mocked typed data.
-- [ ] Build Trends with baseline and alert placeholders.
-- [ ] Build Wellbeing and LocalStorage check-ins.
-- [ ] Build Profile and simulation controls.
-- [ ] Add Future and Retired preview states.
-- [ ] Add accessibility and UI tests.
+- [x] Build the app shell and responsive navigation.
+- [x] Add the dark, high-contrast Horizon design system.
+- [x] Build Active Home with mocked typed data.
+- [x] Build Trends with baseline and alert placeholders.
+- [x] Build Wellbeing and LocalStorage check-ins.
+- [x] Build Profile and simulation controls.
+- [x] Add Future and Retired preview states.
+- [x] Add initial accessibility and UI smoke tests.
 - [ ] Integrate Agent 2's repository contract.
 - [ ] Verify the complete Active Astronaut flow.
 

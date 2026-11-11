@@ -9,7 +9,7 @@ describe("backend dashboard adapter", () => {
         data: [{ id: "traveler-01", name: "Synthetic Aster", life_stage: "active", mission_day: 180, is_synthetic: true }],
         source: "supabase",
       }),
-      listObservations: async () => ({ data: observations, source: "local", warning: "Using deterministic fallback." }),
+      listObservations: async () => ({ data: observations, source: "local", warning: "Using deterministic fallback.", quality: "stale-data" }),
       listEvents: async () => ({ data: [], source: "local" }),
     };
     const adapter = createBackendDashboardRepository(repository);
@@ -20,6 +20,7 @@ describe("backend dashboard adapter", () => {
     expect(profiles.data[0]).toMatchObject({ id: "traveler-01", name: "Synthetic Aster", stage: "active" });
     expect(snapshot.source).toBe("local");
     expect(snapshot.warning).toBe("Using deterministic fallback.");
+    expect(snapshot.quality).toBe("stale");
     expect(snapshot.data.metrics).toHaveLength(6);
     expect(snapshot.data.metrics.find((metric) => metric.metric === "resting_hr")).toMatchObject({ value: 64, baseline: 64 });
   });

@@ -1,7 +1,7 @@
 import type { DashboardSnapshot } from "./dashboardRepository";
 import { evaluateAlerts } from "../domain/alertEngine";
 import type { LifeStage, MetricCardData, MetricName, SimulationControls, TravelerProfile } from "../types/horizon";
-import type { HorizonRepository, MetricName as BackendMetricName, Observation, RepositoryResult, Traveler } from "../domain/types";
+import type { DataQualityState as BackendQuality, HorizonRepository, MetricName as BackendMetricName, Observation, RepositoryResult, Traveler } from "../domain/types";
 
 export type DashboardSource = "supabase" | "local";
 
@@ -9,6 +9,7 @@ export interface DashboardLoadResult<T> {
   data: T;
   source: DashboardSource;
   warning?: string;
+  quality?: "current" | "stale" | "disconnected" | "offline" | "insufficient_baseline";
 }
 
 export interface BackendDashboardRepository {
@@ -40,20 +41,25 @@ export function createBackendDashboardRepository(repository: HorizonRepository):
   return {
     async loadProfiles() {
       const result = await repository.listPeople();
-      return { ...result, data: result.data.map(toProfile) };
+      return { data: result.data.map(toProfile), source: result.source, warning: result.warning };
     },
     async loadSnapshot(personId, controls) {
       const [observations, events] = await Promise.all([
-        repository.listObservations(personId, { from: "2026-01-01", to: "2026-06-29" }),
-        repository.listEvents(personId),
+        repository.listObservations(personId, { from: "2026-01-01", to: "2026-06-29", controls: { seed: controls.seed, replayCount: controls.replayCount, scenario: "usual" } }),
+        repository.listEvents(personId, { controls: { seed: controls.seed, replayCount: controls.replayCount, scenario: "usual" } }),
       ]);
       return {
         data: toDashboardSnapshot(observations.data, controls),
         source: mergeSource(observations, events),
         warning: [observations.warning, events.warning].filter(Boolean).join(" ") || undefined,
+        quality: toQuality(observations.quality),
       };
     },
   };
+}
+
+function toQuality(quality?: BackendQuality): DashboardLoadResult<unknown>["quality"] {
+  return quality === "stale-data" ? "stale" : quality === "missing-data" ? "disconnected" : quality === "offline" ? "offline" : quality === "insufficient-baseline" ? "insufficient_baseline" : "current";
 }
 
 function toProfile(person: Traveler): TravelerProfile {

@@ -1,7 +1,7 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { generateSyntheticData, validateSeed, DEFAULT_SEED } from './synthetic';
 import { metricUnits } from '../domain/types';
-import type { DemoEvent, HorizonRepository, Observation, RepositoryResult, Traveler } from '../domain/types';
+import type { DataQualityState, DemoEvent, HorizonRepository, Observation, RepositoryResult, SimulationControls, Traveler } from '../domain/types';
 
 function synthetic(row: unknown): row is Record<string, unknown> {
   return !!row && typeof row === 'object' && (row as Record<string, unknown>).is_synthetic === true;
@@ -39,8 +39,13 @@ export function createHorizonRepository(client: SupabaseClient | null, seed = DE
   validateSeed(seed);
   const local = generateSyntheticData(seed);
   async function read<T>(table: string, guard: (row: unknown) => row is T, fallback: () => T[],
-    filters: Record<string, string | number> = {}, range?: { from?: string; to?: string }): Promise<RepositoryResult<T[]>> {
-    if (!client) return { data: fallback(), source: 'local', warning: 'Supabase is not configured; using synthetic fallback.' };
+    filters: Record<string, string | number> = {}, range?: { from?: string; to?: string }, controls?: SimulationControls): Promise<RepositoryResult<T[]>> {
+    const quality = controls ? qualityFor(controls, fallback().length) : undefined;
+    if (!client || controls?.scenario === 'offline' || controls?.replayCount) {
+      return { data: fallback(), source: 'local', quality, warning: controls?.replayCount
+        ? 'Replay uses deterministic local synthetic data.'
+        : controls?.scenario === 'offline' ? 'Offline simulation is using deterministic local data.' : 'Supabase is not configured; using synthetic fallback.' };
+    }
     try {
       const rows: T[] = [];
       // Supabase caps response sizes. Stable ID ordering prevents lost rows between pages.
@@ -55,9 +60,9 @@ export function createHorizonRepository(client: SupabaseClient | null, seed = DE
         if (data.length < 500) break;
       }
       // Empty results are valid; do not invent data for unknown travelers or empty date ranges.
-      return { data: rows, source: 'supabase' };
+      return { data: rows, source: 'supabase', quality };
     } catch {
-      return { data: fallback(), source: 'local', warning: 'Cloud data unavailable or invalid; using deterministic synthetic fallback.' };
+      return { data: fallback(), source: 'local', quality, warning: 'Cloud data unavailable or invalid; using deterministic synthetic fallback.' };
     }
   }
   return {
@@ -66,9 +71,17 @@ export function createHorizonRepository(client: SupabaseClient | null, seed = DE
       if ((options.from && !isDate(options.from)) || (options.to && !isDate(options.to))
         || (options.from && options.to && options.from > options.to)) throw new Error('Invalid observation date range.');
       return read('health_observations', isObservation, () => local.observations.filter(o => o.person_id === personId
-        && (!options.from || o.observed_on >= options.from) && (!options.to || o.observed_on <= options.to)),
-      { person_id: personId, seed }, options);
+        && (!options.from || o.observed_on >= options.from) && (!options.to || o.observed_on <= options.to)
+        && options.controls?.scenario !== 'sensor-disconnected'),
+      { person_id: personId, seed }, options, options.controls);
     },
-    listEvents: personId => read('demo_events', isEvent, () => local.events.filter(e => e.person_id === personId), { person_id: personId, seed }),
+    listEvents: (personId, options = {}) => read('demo_events', isEvent, () => local.events.filter(e => e.person_id === personId), { person_id: personId, seed }, undefined, options.controls),
   };
+}
+
+function qualityFor(controls: SimulationControls, observationCount: number): DataQualityState {
+  if (controls.scenario === 'offline') return 'offline';
+  if (controls.scenario === 'stale') return 'stale-data';
+  if (controls.scenario === 'sensor-disconnected') return 'missing-data';
+  return observationCount < 30 ? 'insufficient-baseline' : 'ready';
 }

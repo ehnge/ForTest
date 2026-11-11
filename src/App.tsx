@@ -8,7 +8,7 @@ import { supabase, supabaseConfigured } from "./lib/supabase";
 import { usePersistedState } from "./lib/usePersistedState";
 import type { DashboardSnapshot } from "./lib/dashboardRepository";
 import { fetchRecentSolarEvents, type SolarEventResult } from "./lib/nasaDonki";
-import type { LifeStage, SimulationScenario } from "./types/horizon";
+import type { DataQualityState, LifeStage, SimulationScenario } from "./types/horizon";
 
 export default function App() {
   const mockProfiles = mockDashboardRepository.getProfiles();
@@ -26,13 +26,14 @@ export default function App() {
   const [backendSnapshot, setBackendSnapshot] = useState<DashboardSnapshot | null>(null);
   const [dataSource, setDataSource] = useState<DashboardSource>("local");
   const [dataWarning, setDataWarning] = useState<string | undefined>();
+  const [backendQuality, setBackendQuality] = useState<DataQualityState>("current");
   const [solarEvents, setSolarEvents] = useState<SolarEventResult | null>(null);
   const loadingTimer = useRef<number | undefined>(undefined);
 
   const profile = profiles.find((candidate) => candidate.id === profileId) ?? profiles[0];
   const mockDashboard = useMemo(() => mockDashboardRepository.getSnapshot(scenario, { seed, replayCount }), [scenario, seed, replayCount]);
   const dashboard = scenario === "usual" && backendSnapshot ? backendSnapshot : mockDashboard;
-  const dataQuality = scenario === "sensor_disconnected" ? "disconnected" : scenario === "offline" ? "offline" : scenario === "stale" ? "stale" : "current";
+  const dataQuality = scenario === "usual" ? backendQuality : scenario === "sensor_disconnected" ? "disconnected" : scenario === "offline" ? "offline" : scenario === "stale" ? "stale" : "current";
   const viewSource = scenario === "usual" ? dataSource : "local";
   const viewWarning = scenario === "usual" ? dataWarning : undefined;
   const viewLoading = loading || (scenario === "usual" && backendLoading);
@@ -74,10 +75,12 @@ export default function App() {
         setBackendSnapshot(snapshotResult.data);
         setDataSource(snapshotResult.source);
         setDataWarning([profileResult.warning, snapshotResult.warning].filter(Boolean).join(" ") || undefined);
+        setBackendQuality(snapshotResult.quality ?? "current");
       } catch {
         if (!cancelled) {
           setDataSource("local");
           setDataWarning("Backend data could not be loaded; using deterministic synthetic fallback.");
+          setBackendQuality("current");
         }
       } finally {
         if (!cancelled) setBackendLoading(false);

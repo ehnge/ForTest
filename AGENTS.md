@@ -37,16 +37,17 @@ Horizon is a research demo health companion for space travelers. It uses synthet
 - **Backend adapter wiring:** The usual-day app flow now loads profiles and observations through the typed `HorizonRepository`; explicit demo scenarios remain local fixtures, and Home shows the data source and fallback warning.
 - **Explainable alert engine:** `src/domain/alertEngine.ts` now evaluates personal 30-day baselines, single-reading and sustained-shift rules, emits plain-language reasons, and ignores exercise heart-rate readings; 16 tests pass.
 - **NASA radiation context:** `src/lib/nasaDonki.ts` fetches optional DONKI CME events with browser caching and a labeled mock fallback; Home displays a non-diagnostic Safe/Caution/High radiation context card.
+- **Backend quality integration:** The frontend imports backend commit `9294452` and maps repository quality metadata into current, stale, disconnected, offline, and insufficient-baseline UI states.
 
 ### 🟡 Active Focus
 
 > **AGENT NOTE:** The user explicitly authorized frontend work with typed mock data while the backend contract is pending. Do not connect live Supabase data until Agent 1 publishes the shared repository contract.
 
-- **Immediate task:** Integrate Agent 1's replay/data-quality contract into the frontend adapter, then run combined cloud/RLS and active-flow smoke verification.
+- **Immediate task:** Run the combined branch verification, including the cloud/RLS checks and an active-flow browser smoke test, then prepare the integration merge.
 - **Required tables:** `sample_people`, `health_observations`, and `demo_events`.
 - **Required seed:** Four synthetic travelers with 180 days of observations.
 - **Security requirement:** Enable RLS on every exposed table and allow only the intended synthetic-data reads.
-- **Current blocker:** The backend replay/data-quality contract is now published on `codex/backend-data`, but it still needs to be reviewed and imported into this frontend branch; cloud smoke coverage requires a configured `.env.local`.
+- **Current blocker:** Combined cloud smoke coverage requires a configured `.env.local`; the local fallback, frontend tests, and backend tests are verified.
 
 ## 🧭 Implementation Roadmap
 
@@ -317,7 +318,7 @@ Initial shared types:
 - [x] Verify wellbeing privacy choices persist in LocalStorage.
 - [x] Verify offline Trends fallback and recovery guidance.
 - [x] Integrate Agent 1's repository contract for the usual-day flow, with deterministic local fallback.
-- [ ] Import Agent 1's replay/data-quality contract and map its quality warnings into the UI.
+- [x] Import Agent 1's replay/data-quality contract and map its quality warnings into the UI.
 
 ### Agent 1 — Backend Checklist
 
@@ -345,12 +346,12 @@ Initial shared types:
 
 ### Current Blockers
 
-- Agent 1's replay/data-quality contract is published on `codex/backend-data` but not yet imported into this frontend branch; the frontend preserves local scenario fixtures until review.
+- Combined cloud/RLS and browser smoke verification are still pending; the frontend uses deterministic local fallback when `.env.local` is unavailable.
 - Live cloud smoke testing still needs a verified `.env.local` at runtime; deterministic local fallback is verified without it.
 
 ### Next Coordination Point
 
-NASA context is implemented and verified on the frontend branch. Next coordination point: import backend commit `9294452`, map its quality metadata, then run the integration checklist before merging into `main`.
+NASA context and backend quality mapping are implemented and verified. Next coordination point: run combined cloud/RLS and active-flow smoke verification, then merge the verified branches into `main`.
 
 ## 📈 Delegated Progress Rules
 

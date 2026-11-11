@@ -30,7 +30,8 @@ Horizon is a research demo health companion for space travelers. It uses synthet
 - **Active-flow verification:** A cohesive UI test covers Active Home, recovery alert explanation, Trends, and a local wellbeing check-in.
 - **Disconnected fallback verification:** The UI test suite verifies the “Data unavailable” label and reason when the simulated source disconnects.
 - **Privacy persistence verification:** The UI test suite verifies that a per-category wellbeing privacy toggle persists locally.
-- **Frontend verification:** Browser smoke checks confirmed stage switching and Trends navigation; eleven UI tests, `npm run build`, and `git diff --check` pass.
+- **Offline fallback verification:** The UI test suite verifies that offline Trends show a recovery path instead of stale charts.
+- **Frontend verification:** Browser smoke checks confirmed stage switching and Trends navigation; twelve UI tests, `npm run build`, and `git diff --check` pass.
 
 ### 🟡 Active Focus
 
@@ -307,6 +308,7 @@ Initial shared types:
 - [x] Verify the complete mock Active Astronaut flow from alert to local check-in.
 - [x] Verify the disconnected-source fallback and “Data unavailable” copy.
 - [x] Verify wellbeing privacy choices persist in LocalStorage.
+- [x] Verify offline Trends fallback and recovery guidance.
 - [ ] Integrate Agent 1's repository contract.
 
 ### Agent 1 — Backend Checklist

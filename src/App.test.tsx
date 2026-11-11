@@ -73,6 +73,19 @@ describe("Horizon app shell", () => {
     expect(screen.getByText(/simulated sensor has stopped sending readings/)).toBeInTheDocument();
   });
 
+  it("keeps Trends unavailable in offline mode with a recovery path", async () => {
+    const user = userEvent.setup();
+    render(<App />);
+
+    await user.click(screen.getByRole("button", { name: "Profile" }));
+    await user.selectOptions(screen.getByRole("combobox", { name: "Demo scenario" }), "offline");
+    await waitFor(() => expect(screen.queryByText("Loading simulated signals…")).not.toBeInTheDocument());
+    await user.click(screen.getAllByRole("button", { name: "Trends" })[0]);
+
+    expect(screen.getByRole("heading", { name: "Trends are unavailable" })).toBeInTheDocument();
+    expect(screen.getByText(/Reconnect it from Profile/)).toBeInTheDocument();
+  });
+
   it("opens the plain-language reason for a trend alert", async () => {
     const user = userEvent.setup();
     render(<App />);

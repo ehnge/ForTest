@@ -20,6 +20,7 @@ describe("Horizon app shell", () => {
     expect(screen.getByRole("combobox", { name: "Life stage" })).toHaveValue("retired");
     expect(window.localStorage.getItem("horizon:life-stage")).toBe('"retired"');
     expect(screen.getByText(/Retired astronaut/)).toBeInTheDocument();
+    expect(screen.getByText("Post-mission workspace")).toBeInTheDocument();
   });
 
   it("changes the active view from the navigation", async () => {

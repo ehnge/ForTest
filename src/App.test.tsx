@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it } from "vitest";
 import App from "./App";
@@ -37,6 +37,8 @@ describe("Horizon app shell", () => {
 
     await user.click(screen.getByRole("button", { name: "Profile" }));
     await user.selectOptions(screen.getByRole("combobox", { name: "Demo scenario" }), "recovery_concern");
+    expect(screen.getByText("Loading simulated signals…")).toBeInTheDocument();
+    await waitFor(() => expect(screen.queryByText("Loading simulated signals…")).not.toBeInTheDocument());
     await user.click(screen.getAllByRole("button", { name: "Home" })[0]);
 
     expect(screen.getByText("Watch")).toBeInTheDocument();
@@ -50,6 +52,7 @@ describe("Horizon app shell", () => {
 
     await user.click(screen.getByRole("button", { name: "Profile" }));
     await user.selectOptions(screen.getByRole("combobox", { name: "Demo scenario" }), "stale");
+    await waitFor(() => expect(screen.queryByText("Loading simulated signals…")).not.toBeInTheDocument());
     await user.click(screen.getAllByRole("button", { name: "Trends" })[0]);
 
     expect(screen.getByText(/These readings are stale/)).toBeInTheDocument();

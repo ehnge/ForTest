@@ -20,13 +20,14 @@ Horizon is a research demo health companion for space travelers. It uses synthet
 - **Frontend mock flow:** Active Home, Trends, Wellbeing, Guidance, and Profile views are connected to typed mock data and LocalStorage state.
 - **Frontend data-quality states:** Stale, disconnected, and offline simulation scenarios have distinct Home/Trends messaging and next-step guidance.
 - **Stage-aware previews:** Home copy now changes for Future, Active, and Retired stages while the Active flow remains primary.
-- **Frontend verification:** Browser smoke checks confirmed stage switching and Trends navigation; five UI tests and `npm run build` pass.
+- **Frontend loading boundary:** Scenario changes show an accessible loading state before the selected simulated signals render.
+- **Frontend verification:** Browser smoke checks confirmed stage switching and Trends navigation; five UI tests, `npm run build`, and `git diff --check` pass.
 
 ### 🟡 Active Focus
 
 > **AGENT NOTE:** The user explicitly authorized frontend work with typed mock data while the backend contract is pending. Do not connect live Supabase data until Agent 2 publishes the shared repository contract.
 
-- **Immediate task:** Continue frontend data-quality states and then integrate Agent 2's typed repository contract when it is stable.
+- **Immediate task:** Integrate Agent 2's typed repository contract when it is stable, keeping the loading and data-quality states at the UI boundary.
 - **Required tables:** `sample_people`, `health_observations`, and `demo_events`.
 - **Required seed:** Four synthetic travelers with 180 days of observations.
 - **Security requirement:** Enable RLS on every exposed table and allow only the intended synthetic-data reads.
@@ -287,6 +288,7 @@ Initial shared types:
 - [x] Add initial accessibility and UI smoke tests.
 - [x] Add stale, disconnected, and offline frontend state messaging.
 - [x] Add UI coverage for recovery alerts, stale-data messaging, navigation, and LocalStorage check-ins.
+- [x] Add accessible loading feedback for simulated scenario changes.
 - [ ] Integrate Agent 2's repository contract.
 - [ ] Verify the complete Active Astronaut flow.
 

@@ -35,16 +35,17 @@ Horizon is a research demo health companion for space travelers. It uses synthet
 - **Offline fallback verification:** The UI test suite verifies that offline Trends show a recovery path instead of stale charts.
 - **Frontend verification:** Browser smoke checks confirmed stage switching and Trends navigation; 13 UI/adapter tests, `npm run build`, and `git diff --check` pass after importing the backend contract.
 - **Backend adapter wiring:** The usual-day app flow now loads profiles and observations through the typed `HorizonRepository`; explicit demo scenarios remain local fixtures, and Home shows the data source and fallback warning.
+- **Explainable alert engine:** `src/domain/alertEngine.ts` now evaluates personal 30-day baselines, single-reading and sustained-shift rules, emits plain-language reasons, and ignores exercise heart-rate readings; 16 tests pass.
 
 ### 🟡 Active Focus
 
 > **AGENT NOTE:** The user explicitly authorized frontend work with typed mock data while the backend contract is pending. Do not connect live Supabase data until Agent 1 publishes the shared repository contract.
 
-- **Immediate task:** Replace the adapter's display-only baseline and null alert with Agent 1's verified personal-baseline and explainable-alert contract when published.
+- **Immediate task:** Coordinate the alert-engine contract with Agent 1, then add verified replay/data-quality scenarios and live Supabase smoke coverage.
 - **Required tables:** `sample_people`, `health_observations`, and `demo_events`.
 - **Required seed:** Four synthetic travelers with 180 days of observations.
 - **Security requirement:** Enable RLS on every exposed table and allow only the intended synthetic-data reads.
-- **Current blocker:** Agent 1's baseline/alert engine and backend replay/data-quality scenarios are still pending; until those are published, frontend alert explanations and demo scenario controls remain local mock behavior.
+- **Current blocker:** The alert engine is implemented on the frontend branch pending Agent 1 review; backend replay/data-quality scenarios and NASA DONKI integration remain pending.
 
 ## 🧭 Implementation Roadmap
 
@@ -324,7 +325,7 @@ Initial shared types:
 - [x] Seed four profiles and 180 days of observations.
 - [x] Add the radiation, illness-like, and sleep-disruption events.
 - [x] Add typed domain models and repository functions.
-- [ ] Implement baseline and explainable alert rules.
+- [x] Implement baseline and explainable alert rules.
 - [ ] Add simulation scenarios and deterministic replay.
 - [ ] Add NASA DONKI caching and mock fallback.
 - [x] Add backend/data tests and integration documentation.

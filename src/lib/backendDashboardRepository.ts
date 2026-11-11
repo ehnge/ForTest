@@ -1,4 +1,5 @@
 import type { DashboardSnapshot } from "./dashboardRepository";
+import { evaluateAlerts } from "../domain/alertEngine";
 import type { LifeStage, MetricCardData, MetricName, SimulationControls, TravelerProfile } from "../types/horizon";
 import type { HorizonRepository, MetricName as BackendMetricName, Observation, RepositoryResult, Traveler } from "../domain/types";
 
@@ -47,7 +48,7 @@ export function createBackendDashboardRepository(repository: HorizonRepository):
         repository.listEvents(personId),
       ]);
       return {
-        data: { metrics: toMetricCards(observations.data, controls), alert: null },
+        data: toDashboardSnapshot(observations.data, controls),
         source: mergeSource(observations, events),
         warning: [observations.warning, events.warning].filter(Boolean).join(" ") || undefined,
       };
@@ -82,6 +83,24 @@ function toMetricCards(result: Observation[], controls: SimulationControls): Met
       points: recent.map((observation) => ({ day: observation.observed_on.slice(5), value: round(observation.value), baseline: round(baseline) })),
     };
   });
+}
+
+function toDashboardSnapshot(observations: Observation[], controls: SimulationControls): DashboardSnapshot {
+  const domainAlert = evaluateAlerts(observations)[0];
+  const metrics = toMetricCards(observations, controls);
+  if (!domainAlert) return { metrics, alert: null };
+  return {
+    metrics: metrics.map((metric) => metric.metric === metricMap[domainAlert.metric]
+      ? { ...metric, points: metric.points.map((point) => ({ ...point, alert: point.day === domainAlert.observed_on.slice(5) })) }
+      : metric),
+    alert: {
+      id: domainAlert.id,
+      severity: "watch",
+      metric: metricMap[domainAlert.metric],
+      reason: domainAlert.explanation,
+      nextAction: "Review the trend and complete the optional wellbeing check-in.",
+    },
+  };
 }
 
 function mergeSource(...results: Array<{ source: DashboardSource }>): DashboardSource {

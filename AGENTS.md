@@ -54,6 +54,7 @@ Horizon is a research demo health companion for space travelers. It uses synthet
 - **Space-health UI redesign:** Replaced the oversized landing page with a compact three-stage picker, locally bundled NASA astronaut photography and credit, glass cards, restrained charcoal/cyan colors, smaller type, and consistent desktop/mobile navigation across all views. Metric cards include synthetic sparklines; connection details are expandable.
 - **Redesign verification:** 24 frontend tests, `npm run build`, and `git diff --check` pass. Headless Chrome checks covered all main views, recovery alerts, Future/Retired guidance, and 1440/390/320-pixel layouts with no horizontal overflow or uncaught errors. App and image HTTP checks return 200. Vite retains its existing large-bundle warning.
 - **Stage-selection test coverage:** UI tests now enter through the required stage picker and cover Future practices/timeline and local check-in restoration after reselecting a stage.
+- **Profile navigation icon:** Desktop and mobile navigation now share the `UserRound` person icon for Profile. `npm run build` and `git diff --check` pass.
 
 ### 🟡 Active Focus
 

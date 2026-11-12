@@ -1,4 +1,4 @@
-import { Activity, ArrowUpRight, ChartNoAxesCombined, Compass, HeartHandshake, Menu, Orbit, ShieldCheck, SlidersHorizontal, X } from "lucide-react";
+import { Activity, ArrowUpRight, ChartNoAxesCombined, Compass, HeartHandshake, Menu, Orbit, ShieldCheck, UserRound, X } from "lucide-react";
 import { useState, type ReactNode } from "react";
 import type { LifeStage } from "../types/horizon";
 
@@ -8,7 +8,7 @@ const navigation: Array<{ id: ViewName; label: string; icon: typeof Activity }> 
   { id: "trends", label: "Trends", icon: ChartNoAxesCombined },
   { id: "wellbeing", label: "Wellbeing", icon: HeartHandshake },
   { id: "guidance", label: "Guidance", icon: Compass },
-  { id: "profile", label: "Profile", icon: SlidersHorizontal },
+  { id: "profile", label: "Profile", icon: UserRound },
 ];
 
 export function Brand() {

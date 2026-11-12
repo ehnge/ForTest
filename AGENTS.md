@@ -48,6 +48,8 @@ Horizon is a research demo health companion for space travelers. It uses synthet
 - **Visual refresh verification:** 21 frontend tests, `npm run build`, and `git diff --check` pass after the Dark Tech refresh.
 - **Editorial motion treatment:** Home now uses a Horizon-colored poster hero, telemetry straps, ruled data rows, and reduced-motion-safe scroll reveal classes inspired by the supplied editorial landing-page brief.
 - **Editorial refresh verification:** 21 frontend tests, `npm run build`, and `git diff --check` pass after the editorial scroll-style treatment.
+- **Original Horizon palette restored:** The visual system now uses the screenshot palette: deep navy surfaces, cyan primary accent, blue-grey text, purple accent context, rounded dark panels, and preserved amber/green statuses.
+- **Palette refresh verification:** 21 frontend tests, `npm run build`, and `git diff --check` pass after restoring the original Horizon colors.
 
 ### 🟡 Active Focus
 

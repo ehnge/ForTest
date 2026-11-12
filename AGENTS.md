@@ -46,6 +46,8 @@ Horizon is a research demo health companion for space travelers. It uses synthet
 - **Integration verification:** Backend unit tests (9), backend build, and live publishable-key parity checks (4 profiles, 4,320 observations, 12 events) pass; frontend tests (18), build, and diff checks pass.
 - **Dark Tech visual system:** The app now uses a black/radial-glow canvas, Inter/system editorial text, monospace metric values, square controls, pill status chips, white card rings, and responsive high-contrast navigation while preserving the safety banner.
 - **Visual refresh verification:** 21 frontend tests, `npm run build`, and `git diff --check` pass after the Dark Tech refresh.
+- **Editorial motion treatment:** Home now uses a Horizon-colored poster hero, telemetry straps, ruled data rows, and reduced-motion-safe scroll reveal classes inspired by the supplied editorial landing-page brief.
+- **Editorial refresh verification:** 21 frontend tests, `npm run build`, and `git diff --check` pass after the editorial scroll-style treatment.
 
 ### 🟡 Active Focus
 

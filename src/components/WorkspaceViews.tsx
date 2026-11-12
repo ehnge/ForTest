@@ -11,7 +11,7 @@ import type { ViewName } from "./AppShell";
 
 type CheckIn = { mood: string; stress: string; sleepQuality: string; note: string };
 type Privacy = { mood: boolean; notes: boolean; trends: boolean };
-const panelClass = "rounded-3xl border border-slate-700/70 bg-slate-900/70 p-5 shadow-xl shadow-black/10 sm:p-6";
+const panelClass = "tech-card p-5 sm:p-6";
 
 export function HomeView({ profile, stage, scenario, metrics, alert, dataQuality, loading, source, warning, solarEvents, onViewChange }: { profile: TravelerProfile; stage: LifeStage; scenario: SimulationScenario; metrics: MetricCardData[]; alert: Alert | null; dataQuality: DataQualityState; loading: boolean; source?: DashboardSource; warning?: string; solarEvents?: SolarEventResult | null; onViewChange: (view: ViewName) => void }) {
   const dataUnavailable = dataQuality === "disconnected" || dataQuality === "offline";

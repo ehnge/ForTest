@@ -1,10 +1,15 @@
 @import "tailwindcss";
 
-:root { color: #e8f0ff; background: #060b18; font-family: Inter, ui-sans-serif, system-ui, sans-serif; }
+:root { color: #ededed; background: #000; font-family: Inter, ui-sans-serif, system-ui, sans-serif; }
 body { min-width: 320px; margin: 0; }
 button, input, select, textarea { font: inherit; }
-button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 3px solid #6ee7f9; outline-offset: 3px; }
-.star-field { background-image: radial-gradient(circle at 20% 15%, rgba(103,232,249,.16), transparent 28%), radial-gradient(circle at 75% 0%, rgba(139,92,246,.18), transparent 24%), radial-gradient(circle at 50% 70%, rgba(14,116,144,.08), transparent 32%); }
-.field { width: 100%; border: 1px solid rgb(71 85 105 / 0.9); border-radius: 0.75rem; background: rgb(2 6 23 / 0.65); padding: 0.75rem 0.875rem; color: #f8fafc; }
-.field::placeholder { color: #64748b; }
-.field:hover { border-color: rgb(103 232 249 / 0.55); }
+button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 2px solid #52a8ff; outline-offset: 3px; }
+.star-field { background-color: #000; background-image: radial-gradient(circle at 15% 8%, rgba(82,168,255,.13), transparent 28%), radial-gradient(circle at 88% 0%, rgba(98,192,115,.06), transparent 22%), radial-gradient(circle at 50% 72%, rgba(255,255,255,.035), transparent 34%); }
+.tech-card { border: 1px solid rgba(255,255,255,.145); border-radius: 0; background: #0a0a0a; box-shadow: 0 20px 60px rgba(0,0,0,.22); }
+.btn-square { border-radius: 0; transition: background-color .2s ease, color .2s ease, border-color .2s ease; }
+.btn-square:hover { background: #ededed; color: #121212; }
+button.rounded-xl, button.rounded-lg { border-radius: 0; }
+.mono-data { font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace; letter-spacing: -.04em; }
+.field { width: 100%; border: 1px solid rgba(255,255,255,.2); border-radius: 0; background: #050505; padding: 0.75rem 0.875rem; color: #ededed; }
+.field::placeholder { color: #666; }
+.field:hover { border-color: #52a8ff; }

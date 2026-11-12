@@ -44,16 +44,18 @@ Horizon is a research demo health companion for space travelers. It uses synthet
 - **Retired summary preview:** Retired guidance includes locally persisted, selectable synthetic fields for a non-diagnostic conversation summary.
 - **About and limits:** Guidance links NASA NTRS and OSDR and states the synthetic, non-diagnostic research-demo limits.
 - **Integration verification:** Backend unit tests (9), backend build, and live publishable-key parity checks (4 profiles, 4,320 observations, 12 events) pass; frontend tests (18), build, and diff checks pass.
+- **Dark Tech visual system:** The app now uses a black/radial-glow canvas, Inter/system editorial text, monospace metric values, square controls, pill status chips, white card rings, and responsive high-contrast navigation while preserving the safety banner.
+- **Visual refresh verification:** 21 frontend tests, `npm run build`, and `git diff --check` pass after the Dark Tech refresh.
 
 ### 🟡 Active Focus
 
 > **AGENT NOTE:** The user explicitly authorized frontend work with typed mock data while the backend contract is pending. Do not connect live Supabase data until Agent 1 publishes the shared repository contract.
 
-- **Immediate task:** Open the integration pull request into `main` for review; manual browser interaction remains an optional follow-up because browser automation is disabled in this session.
+- **Immediate task:** Deploy `main` to Vercel with the two Vite Supabase environment variables and verify the production URL.
 - **Required tables:** `sample_people`, `health_observations`, and `demo_events`.
 - **Required seed:** Four synthetic travelers with 180 days of observations.
 - **Security requirement:** Enable RLS on every exposed table and allow only the intended synthetic-data reads.
-- **Current blocker:** Browser automation is unavailable in the current Codex Work settings; automated Active-flow coverage and the production-server HTTP smoke check pass, but no interactive browser session was claimed.
+- **Current blocker:** Vercel project deployment and production URL verification require the team's Vercel project connection; local build and automated UI coverage pass.
 
 ## 🧭 Implementation Roadmap
 

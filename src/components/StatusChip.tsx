@@ -10,5 +10,5 @@ const styles = {
 
 export function StatusChip({ severity }: { severity: AlertSeverity | "unavailable" }) {
   const { label, className, Icon } = styles[severity];
-  return <span className={`inline-flex items-center gap-2 rounded-full border px-3 py-1 text-sm font-semibold ${className}`}><Icon aria-hidden="true" size={16} />{label}</span>;
+  return <span className={`inline-flex items-center gap-2 rounded-full border border-transparent bg-[#1f1f1f] px-3 py-1 text-xs font-semibold uppercase tracking-wide ${className}`}><Icon aria-hidden="true" size={14} />{label}</span>;
 }

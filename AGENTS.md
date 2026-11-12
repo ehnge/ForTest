@@ -50,16 +50,17 @@ Horizon is a research demo health companion for space travelers. It uses synthet
 - **Editorial refresh verification:** 21 frontend tests, `npm run build`, and `git diff --check` pass after the editorial scroll-style treatment.
 - **Original Horizon palette restored:** The visual system now uses the screenshot palette: deep navy surfaces, cyan primary accent, blue-grey text, purple accent context, rounded dark panels, and preserved amber/green statuses.
 - **Palette refresh verification:** 21 frontend tests, `npm run build`, and `git diff --check` pass after restoring the original Horizon colors.
+- **Future persistence foundation:** Stage selection now gates the app, anonymous Supabase sessions are restored or created, Future preparation UI includes baseline, practice, and Days 1–14 adaptation flows, and typed cloud persistence adapters plus an RLS migration are present.
 
 ### 🟡 Active Focus
 
 > **AGENT NOTE:** The user explicitly authorized frontend work with typed mock data while the backend contract is pending. Do not connect live Supabase data until Agent 1 publishes the shared repository contract.
 
-- **Immediate task:** Deploy `main` to Vercel with the two Vite Supabase environment variables and verify the production URL.
+- **Immediate task:** Apply and verify the new Future preparation migration in the configured Supabase project, then update the UI tests for the required stage-selection onboarding.
 - **Required tables:** `sample_people`, `health_observations`, and `demo_events`.
 - **Required seed:** Four synthetic travelers with 180 days of observations.
 - **Security requirement:** Enable RLS on every exposed table and allow only the intended synthetic-data reads.
-- **Current blocker:** Vercel project deployment and production URL verification require the team's Vercel project connection; local build and automated UI coverage pass.
+- **Current blocker:** The new migration has not yet been applied to the live Supabase project, and the existing UI tests still assume the removed Active-by-default onboarding flow.
 
 ## 🧭 Implementation Roadmap
 

@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { AppShell, type ViewName } from "./components/AppShell";
-import { GuidanceView, HomeView, ProfileView, TrendsView, WellbeingView } from "./components/WorkspaceViews";
+import { GuidanceView, HomeView, ProfileView, StageSelectionView, TrendsView, WellbeingView } from "./components/WorkspaceViews";
 import { createHorizonRepository } from "./data/repository";
 import { createBackendDashboardRepository, type DashboardSource } from "./lib/backendDashboardRepository";
 import { mockDashboardRepository } from "./lib/mockDashboardRepository";
@@ -9,12 +9,17 @@ import { usePersistedState } from "./lib/usePersistedState";
 import type { DashboardSnapshot } from "./lib/dashboardRepository";
 import { fetchRecentSolarEvents, type SolarEventResult } from "./lib/nasaDonki";
 import type { DataQualityState, LifeStage, SimulationScenario } from "./types/horizon";
+import { ensureAnonymousSession } from "./lib/anonymousAuth";
+import { createPreparationRepository } from "./lib/preparationRepository";
 
 export default function App() {
   const mockProfiles = mockDashboardRepository.getProfiles();
   const [profiles, setProfiles] = useState(mockProfiles);
   const [activeView, setActiveView] = useState<ViewName>("home");
-  const [stage, setStage] = usePersistedState<LifeStage>("horizon:life-stage", "active");
+  const [stage, setStage] = useState<LifeStage | null>(null);
+  const [authLoading, setAuthLoading] = useState(true);
+  const [userId, setUserId] = useState<string | null>(null);
+  const [cloudWarning, setCloudWarning] = useState<string | undefined>();
   const [scenario, setScenario] = usePersistedState<SimulationScenario>("horizon:scenario", "usual");
   const [seed, setSeed] = usePersistedState<number>("horizon:seed", 42);
   const [replayCount, setReplayCount] = usePersistedState<number>("horizon:replay-count", 0);
@@ -31,6 +36,7 @@ export default function App() {
   const loadingTimer = useRef<number | undefined>(undefined);
 
   const profile = profiles.find((candidate) => candidate.id === profileId) ?? profiles[0];
+  const preparationRepository = useMemo(() => createPreparationRepository(supabase, userId), [userId]);
   const mockDashboard = useMemo(() => mockDashboardRepository.getSnapshot(scenario, { seed, replayCount }), [scenario, seed, replayCount]);
   const dashboard = scenario === "usual" && backendSnapshot ? backendSnapshot : mockDashboard;
   const dataQuality = scenario === "usual" ? backendQuality : scenario === "sensor_disconnected" ? "disconnected" : scenario === "offline" ? "offline" : scenario === "stale" ? "stale" : "current";
@@ -41,10 +47,33 @@ export default function App() {
     createHorizonRepository(supabaseConfigured && seed === 42 ? supabase : null, seed),
   ), [seed]);
 
+  useEffect(() => {
+    let cancelled = false;
+    void (async () => {
+      const auth = await ensureAnonymousSession(supabase);
+      if (cancelled) return;
+      setUserId(auth.userId);
+      setCloudWarning(auth.warning);
+      if (auth.userId) {
+        const preference = await createPreparationRepository(supabase, auth.userId).getTravelerPreferences();
+        if (!cancelled && preference.data) {
+          setStage(preference.data.stage);
+          setProfileId(preference.data.profileId);
+        }
+        if (!cancelled) setCloudWarning(auth.warning ?? preference.warning);
+      }
+      setAuthLoading(false);
+    })();
+    return () => { cancelled = true; };
+  }, [setProfileId]);
+
   const setStageAndProfile = (nextStage: LifeStage) => {
-    setStage(nextStage);
-    const matchingProfile = profiles.find((candidate) => candidate.stage === nextStage);
-    if (matchingProfile) setProfileId(matchingProfile.id);
+    const matchingProfile = profiles.find((candidate) => candidate.stage === nextStage) ?? profiles[0];
+    void preparationRepository.saveTravelerPreferences(nextStage, matchingProfile.id).then((result) => {
+      if (result.warning) setCloudWarning(result.warning); else setCloudWarning(undefined);
+      setStage(nextStage);
+      setProfileId(matchingProfile.id);
+    });
   };
 
   useEffect(() => () => window.clearTimeout(loadingTimer.current), []);
@@ -110,6 +139,9 @@ export default function App() {
     loadingTimer.current = window.setTimeout(() => setLoading(false), 180);
   };
 
+  if (authLoading) return <StageSelectionView loading />;
+  if (!stage) return <StageSelectionView warning={cloudWarning} onSelect={setStageAndProfile} />;
+
   const content = (() => {
     switch (activeView) {
       case "trends":
@@ -117,7 +149,7 @@ export default function App() {
       case "wellbeing":
         return <WellbeingView checkIn={checkIn} onCheckInChange={setCheckIn} privacy={privacy} onPrivacyChange={setPrivacy} />;
       case "guidance":
-        return <GuidanceView stage={stage} />;
+        return <GuidanceView stage={stage} preparationRepository={preparationRepository} />;
       case "profile":
         return <ProfileView profile={profile} profiles={profiles} stage={stage} scenario={scenario} seed={seed} replayCount={replayCount} loading={viewLoading} onProfileChange={setProfileId} onScenarioChange={setScenarioWithLoading} onSeedChange={setSeedWithLoading} onReplay={replayEvents} onStageChange={setStageAndProfile} />;
       case "home":

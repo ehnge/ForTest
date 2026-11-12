@@ -55,12 +55,14 @@ Horizon is a research demo health companion for space travelers. It uses synthet
 - **Redesign verification:** 24 frontend tests, `npm run build`, and `git diff --check` pass. Headless Chrome checks covered all main views, recovery alerts, Future/Retired guidance, and 1440/390/320-pixel layouts with no horizontal overflow or uncaught errors. App and image HTTP checks return 200. Vite retains its existing large-bundle warning.
 - **Stage-selection test coverage:** UI tests now enter through the required stage picker and cover Future practices/timeline and local check-in restoration after reselecting a stage.
 - **Profile navigation icon:** Desktop and mobile navigation now share the `UserRound` person icon for Profile. `npm run build` and `git diff --check` pass.
+- **Light and dark appearance:** Landing and workspace headers include an accessible sun/moon toggle. Appearance starts from the device preference, saves explicit choices in LocalStorage, and restores before first paint. Light mode uses off-white glass surfaces, slate text, and muted teal; dark mode keeps charcoal/cyan. Charts, controls, notices, and status colors adapt across all stages.
+- **Theme verification:** 27 frontend tests, production build, and diff checks pass. Chrome checks verified both themes at 1440/390/320 pixels, all workspace views, Future/Retired guidance, saved preferences, pre-React restoration, and no horizontal overflow or page errors. Core text/action contrast exceeds 4.5:1 and chart contrast exceeds 3:1 in both palettes. Chart animation is disabled for immediate, stable rendering.
 
 ### 🟡 Active Focus
 
 > **AGENT NOTE:** The user explicitly authorized frontend work with typed mock data while the backend contract is pending. Do not connect live Supabase data until Agent 1 publishes the shared repository contract.
 
-- **Immediate task:** Apply and verify the Future preparation migration in the configured Supabase project. The requested UI redesign and stage-selection test updates are verified.
+- **Immediate task:** Apply and verify the Future preparation migration in the configured Supabase project. The UI redesign, light/dark appearance, and stage-selection test updates are verified.
 - **Required tables:** `sample_people`, `health_observations`, and `demo_events`.
 - **Required seed:** Four synthetic travelers with 180 days of observations.
 - **Security requirement:** Enable RLS on every exposed table and allow only the intended synthetic-data reads.
@@ -337,6 +339,7 @@ Initial shared types:
 - [x] Integrate Agent 1's repository contract for the usual-day flow, with deterministic local fallback.
 - [x] Import Agent 1's replay/data-quality contract and map its quality warnings into the UI.
 - [x] Redesign the complete UI with compact typography, glass cards, NASA space imagery, responsive navigation, and stage-selection coverage.
+- [x] Add persistent light/dark appearance across landing, workspaces, charts, and forms; verify desktop/mobile layouts and contrast.
 
 ### Agent 1 — Backend Checklist
 

@@ -1,6 +1,6 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { beforeEach, describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import App from "./App";
 
 async function openWorkspace(stage: "active" | "future" | "retired" = "active") {
@@ -14,6 +14,46 @@ async function openWorkspace(stage: "active" | "future" | "retired" = "active") 
 describe("Horizon app shell", () => {
   beforeEach(() => {
     window.localStorage.clear();
+  });
+
+  it("switches appearance on the landing page and keeps it across workspace navigation", async () => {
+    const user = userEvent.setup();
+    render(<App />);
+    await user.click(screen.getByRole("button", { name: "Switch to light mode" }));
+    expect(document.documentElement).toHaveAttribute("data-theme", "light");
+    expect(window.localStorage.getItem("horizon:theme")).toBe('"light"');
+    await user.click(await screen.findByRole("button", { name: "Active astronaut" }));
+    await user.click(screen.getAllByRole("button", { name: "Trends" })[0]);
+    expect(document.documentElement).toHaveAttribute("data-theme", "light");
+    await user.click(screen.getByRole("button", { name: "Switch to dark mode" }));
+    expect(document.documentElement).toHaveAttribute("data-theme", "dark");
+    expect(screen.getByRole("heading", { name: "Your signals over time" })).toBeInTheDocument();
+  });
+
+  it("restores the saved appearance after a refresh", async () => {
+    const user = userEvent.setup();
+    const first = render(<App />);
+    await user.click(screen.getByRole("button", { name: "Switch to light mode" }));
+    first.unmount();
+    const second = render(<App />);
+    expect(document.documentElement).toHaveAttribute("data-theme", "light");
+    await user.click(screen.getByRole("button", { name: "Switch to dark mode" }));
+    second.unmount();
+    render(<App />);
+    expect(document.documentElement).toHaveAttribute("data-theme", "dark");
+    expect(screen.getByRole("button", { name: "Switch to light mode" })).toBeInTheDocument();
+  });
+
+  it("uses the device appearance until the user saves a choice", async () => {
+    vi.stubGlobal("matchMedia", vi.fn(() => ({ matches: true })));
+    try {
+      const first = render(<App />);
+      expect(document.documentElement).toHaveAttribute("data-theme", "light");
+      await userEvent.click(screen.getByRole("button", { name: "Switch to dark mode" }));
+      first.unmount();
+      render(<App />);
+      expect(document.documentElement).toHaveAttribute("data-theme", "dark");
+    } finally { vi.unstubAllGlobals(); }
   });
 
 

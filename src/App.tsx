@@ -11,8 +11,13 @@ import { fetchRecentSolarEvents, type SolarEventResult } from "./lib/nasaDonki";
 import type { DataQualityState, LifeStage, SimulationScenario } from "./types/horizon";
 import { ensureAnonymousSession } from "./lib/anonymousAuth";
 import { createPreparationRepository } from "./lib/preparationRepository";
+import { ThemeProvider } from "./lib/theme";
 
 export default function App() {
+  return <ThemeProvider><HorizonApp /></ThemeProvider>;
+}
+
+function HorizonApp() {
   const mockProfiles = mockDashboardRepository.getProfiles();
   const [profiles, setProfiles] = useState(mockProfiles);
   const [activeView, setActiveView] = useState<ViewName>("home");

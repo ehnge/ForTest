@@ -9,6 +9,7 @@ import { usePersistedState } from "../lib/usePersistedState";
 import type { Alert, DataQualityState, LifeStage, MetricCardData, SimulationScenario, TravelerProfile } from "../types/horizon";
 import { Brand, SafetyDisclaimer, type ViewName } from "./AppShell";
 import type { PreparationRepository } from "../lib/preparationRepository";
+import { ThemeToggle } from "./ThemeToggle";
 
 type CheckIn = { mood: string; stress: string; sleepQuality: string; note: string };
 type Privacy = { mood: boolean; notes: boolean; trends: boolean };
@@ -22,7 +23,7 @@ export function StageSelectionView({ loading, warning, onSelect }: { loading?: b
   ];
   return <main className="star-field onboarding">
     <div className="onboarding-container">
-      <header className="onboarding-topbar"><Brand /><span className="onboarding-topline">A human perspective on space health</span><span className="research-badge"><span /> Research demo</span></header>
+      <header className="onboarding-topbar"><Brand /><span className="onboarding-topline">A human perspective on space health</span><div className="onboarding-actions"><span className="research-badge"><span /> Research demo</span><ThemeToggle /></div></header>
       <div className="onboarding-grid">
         <section className="journey-selection" aria-labelledby="journey-title">
           <p className="eyebrow"><span className="small-rule" /> YOUR SPACE. YOUR PACE.</p>

@@ -1,6 +1,7 @@
 import { Activity, ArrowUpRight, ChartNoAxesCombined, Compass, HeartHandshake, Menu, Orbit, ShieldCheck, UserRound, X } from "lucide-react";
 import { useState, type ReactNode } from "react";
 import type { LifeStage } from "../types/horizon";
+import { ThemeToggle } from "./ThemeToggle";
 
 export type ViewName = "home" | "trends" | "wellbeing" | "guidance" | "profile";
 const navigation: Array<{ id: ViewName; label: string; icon: typeof Activity }> = [
@@ -36,6 +37,7 @@ export function AppShell({ activeView, onViewChange, stage, onStageChange, child
         <button type="button" className="mobile-menu icon-button" aria-label={mobileOpen ? "Close navigation" : "Open navigation"} aria-expanded={mobileOpen} aria-controls="mobile-menu" onClick={() => setMobileOpen((open) => !open)}>{mobileOpen ? <X size={19} /> : <Menu size={19} />}</button>
         <div className="workspace-breadcrumb"><span>Mission control</span><span aria-hidden="true">/</span><p>{workspaceLabel}</p></div>
         <label className="stage-control">Stage<select aria-label="Life stage" value={stage} onChange={(event) => onStageChange(event.target.value as LifeStage)}><option value="future">Future</option><option value="active">Active</option><option value="retired">Retired</option></select></label>
+        <ThemeToggle />
         <span className="workspace-avatar" aria-hidden="true"><Orbit size={19} /></span>
       </header>
       {mobileOpen ? <div id="mobile-menu" className="mobile-drawer"><Nav activeView={activeView} onChoose={chooseView} /></div> : null}

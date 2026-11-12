@@ -58,6 +58,7 @@ Horizon is a research demo health companion for space travelers. It uses synthet
 - **Light and dark appearance:** Landing and workspace headers include an accessible sun/moon toggle. Appearance starts from the device preference, saves explicit choices in LocalStorage, and restores before first paint. Light mode uses warm ivory, white glass cards, ink text, and subdued teal; dark mode keeps charcoal/cyan. Charts, controls, notices, and status colors adapt across all stages.
 - **Theme verification:** 27 frontend tests, production build, and diff checks pass. Chrome checks verified both themes at 1440/390/320 pixels, all workspace views, Future/Retired guidance, saved preferences, pre-React restoration, and no horizontal overflow or page errors. Core text/action contrast exceeds 4.5:1 and chart contrast exceeds 3:1 in both palettes. Chart animation is disabled for immediate, stable rendering.
 - **Light-mode refinement:** Removed the blue-grey wash and heavy shadows, simplified card and navigation surfaces, and restyled NASA imagery into circular navy space views. The revised light palette passes the build, 27 tests, diff checks, and 1440/390/320-pixel browser checks; artwork/caption spacing and text/chart contrast are verified.
+- **Main UI integration:** Fast-forwarded `main` to include all four verified `codex/space-health-ui` commits, through `a93a83c`, at the user's request. Application files match the tested UI branch; no merge conflicts or code changes were needed.
 
 ### 🟡 Active Focus
 
@@ -365,6 +366,7 @@ Initial shared types:
 - [x] Run the combined build, unit tests, RLS checks, and active-flow smoke test after branch integration.
 - [x] Review synthetic-data labels and safety copy for the frontend flow.
 - [ ] Merge the verified integration pull request into `main`.
+- [x] Integrate the verified space-health UI, Profile icon, and light/dark appearance into `main`.
 
 ### Current Blockers
 
@@ -372,7 +374,7 @@ Initial shared types:
 
 ### Next Coordination Point
 
-Review the verified UI redesign on `codex/space-health-ui` for integration into `main`. It includes the stage-selection test updates and locally bundled NASA imagery. The next backend task remains live verification of the Future preparation migration.
+The verified space-health UI is integrated into `main`, including stage-selection coverage, NASA imagery, and the revised light/dark appearance. The next backend task remains live verification of the Future preparation migration.
 
 ## 📈 Delegated Progress Rules
 

@@ -51,16 +51,19 @@ Horizon is a research demo health companion for space travelers. It uses synthet
 - **Original Horizon palette restored:** The visual system now uses the screenshot palette: deep navy surfaces, cyan primary accent, blue-grey text, purple accent context, rounded dark panels, and preserved amber/green statuses.
 - **Palette refresh verification:** 21 frontend tests, `npm run build`, and `git diff --check` pass after restoring the original Horizon colors.
 - **Future persistence foundation:** Stage selection now gates the app, anonymous Supabase sessions are restored or created, Future preparation UI includes baseline, practice, and Days 1–14 adaptation flows, and typed cloud persistence adapters plus an RLS migration are present.
+- **Space-health UI redesign:** Replaced the oversized landing page with a compact three-stage picker, locally bundled NASA astronaut photography and credit, glass cards, restrained charcoal/cyan colors, smaller type, and consistent desktop/mobile navigation across all views. Metric cards include synthetic sparklines; connection details are expandable.
+- **Redesign verification:** 24 frontend tests, `npm run build`, and `git diff --check` pass. Headless Chrome checks covered all main views, recovery alerts, Future/Retired guidance, and 1440/390/320-pixel layouts with no horizontal overflow or uncaught errors. App and image HTTP checks return 200. Vite retains its existing large-bundle warning.
+- **Stage-selection test coverage:** UI tests now enter through the required stage picker and cover Future practices/timeline and local check-in restoration after reselecting a stage.
 
 ### 🟡 Active Focus
 
 > **AGENT NOTE:** The user explicitly authorized frontend work with typed mock data while the backend contract is pending. Do not connect live Supabase data until Agent 1 publishes the shared repository contract.
 
-- **Immediate task:** Apply and verify the new Future preparation migration in the configured Supabase project, then update the UI tests for the required stage-selection onboarding.
+- **Immediate task:** Apply and verify the Future preparation migration in the configured Supabase project. The requested UI redesign and stage-selection test updates are verified.
 - **Required tables:** `sample_people`, `health_observations`, and `demo_events`.
 - **Required seed:** Four synthetic travelers with 180 days of observations.
 - **Security requirement:** Enable RLS on every exposed table and allow only the intended synthetic-data reads.
-- **Current blocker:** The new migration has not yet been applied to the live Supabase project, and the existing UI tests still assume the removed Active-by-default onboarding flow.
+- **Current blocker:** The new migration has not yet been verified against the live Supabase project. This checkout has no `.env.local`; the local preview uses the synthetic fallback.
 
 ## 🧭 Implementation Roadmap
 
@@ -332,6 +335,7 @@ Initial shared types:
 - [x] Verify offline Trends fallback and recovery guidance.
 - [x] Integrate Agent 1's repository contract for the usual-day flow, with deterministic local fallback.
 - [x] Import Agent 1's replay/data-quality contract and map its quality warnings into the UI.
+- [x] Redesign the complete UI with compact typography, glass cards, NASA space imagery, responsive navigation, and stage-selection coverage.
 
 ### Agent 1 — Backend Checklist
 
@@ -359,11 +363,11 @@ Initial shared types:
 
 ### Current Blockers
 
-- Browser automation is unavailable in the current Codex Work settings; automated Active-flow coverage and the production-server HTTP smoke check pass.
+- The Future preparation migration still needs live Supabase verification; this checkout has no `.env.local`. UI browser checks are available through headless Chrome; interactive computer-use helpers fail with `failed to write kernel assets: The system cannot find the path specified. (os error 3)`.
 
 ### Next Coordination Point
 
-The integration branch is verified and pushed as `d57085b`. Next coordination point: review and merge its pull request into `main`.
+Review the verified UI redesign on `codex/space-health-ui` for integration into `main`. It includes the stage-selection test updates and locally bundled NASA imagery. The next backend task remains live verification of the Future preparation migration.
 
 ## 📈 Delegated Progress Rules
 
